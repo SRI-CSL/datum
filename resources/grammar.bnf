@@ -1,0 +1,147 @@
+datum = line_prefix firstline newline lines
+
+<firstline> = cfirstline | sfirstline
+<cfirstline> = (subject spaces)? assay spaces <'is'> spaces change spaces ctreatment
+<ctreatment> = 'irt' spaces treatments (spaces? stimes)? |
+               'by' spaces treatments |
+               'itpo' spaces xtreatments |
+               'itao' spaces ktreatment
+change = ('slightly' | 'detectable-but')? spaces?
+         ('increased' | 'decreased' | 'unchanged')
+stimes = <'('> (nat spaces symbol | excuse) <')'>
+excuse = 'tnr' | 'times' | 'tbg'
+
+<sfirstline> = (subject spaces)? assay spaces <'is'> spaces schange
+schange = 'undetectable' | 'detectable'
+
+<lines> = datumline (spaces? newline datumline)*
+<datumline> = <'  '> line_prefix
+              (source | environment | times | extra |
+               meta | comment | oligo | ip)
+
+subject = symbol / symbol handle / xsprotein / oprotein
+
+xsprotein = oprotein handle 'IP'?
+handle = <'['> symbol <']'>
+oprotein = origin symbol mutations? modification*
+xoprotein = 'x' symbol mutations? modification*
+<origin> = #'[xrpks]?'
+mutations = <'('> pmutation (<'/'> pmutation)* <')'> string?
+<pmutation> = mutation | <'('> mutation <')'>
+<mutation> = domain / del_mut / s_mut / r_mut / symbol
+del_mut = <'del('> domain <')'>
+s_mut = #'p[TSY]\d{1,4}'
+r_mut = letter nat letter
+domain = nat <'-'> nat
+
+modification = <'{'> symbol sites <'}'>
+sites = <'('> site (<'/'> site)* <')'>
+site = #'([ACTYSKPNLMVIFDERHQWG]|p[TYS])\d+' | symbol
+
+assay = ivka | ivlka | oligo_binding | locatedin | infraction | phos | boundto | modification_assay | binding
+detect = <'['> symbol <']'>
+ivka = <'IVKA('> substrates <')'> sites? detect
+ivlka = <'IVLKA('> lipids <')'> detect
+activity_assay = ('IVGefA' | 'IVPPaseAct' | 'IVHatAct' | 'IVProteaseAct') <'('> symbol <')'>
+oligo_binding = <'oligo-binding'> detect
+locatedin = <'locatedin('> symbol <')'> detect
+infraction = <'infraction('> symbol <')'> detect
+phos = ('ST' | #'[STY]') <'phos'> detect
+boundto = <'boundto('> symbol <')'> detect
+modification_assay = symbol sites? detect
+binding = symbol detect spaces hooks
+hooks = <'('> hook (plus hook)* <')'> | hook (plus hook)*
+hook = ('oligo' / symbol / oprotein) <'['> symbol <']'> 'IP'?
+substrates = symbol (<#'[/,]'> symbol)*
+lipids = symbol (<'/'> symbol)*
+
+<treatment> = symbol / oprotein / xsprotein
+<streatment> = streat_treatment
+
+<conjunction> = 'and/or' | 'and' | 'or' | '+'
+
+<streat_treatment> = treatment (spaces conjunction spaces treatment)*
+<streat_x_or_o> = (oprotein / xsprotein) (spaces conjunction spaces (oprotein / xsprotein))*
+<streat_ox> = xoprotein (spaces conjunction spaces xoprotein)*
+
+treatments = <'('> spaces? streat_treatment spaces? <')'> /
+             streat_treatment
+
+xtreatments = <'('> spaces? streat_ox spaces? <')'> /
+              streat_ox
+
+ktreatment = kte ktest (spaces conjunction spaces kte ktest)* |
+             kte (spaces conjunction spaces kte)* ktest
+
+ktest = spaces <'['> symbol <']'>
+kte = symbol / oprotein / xsprotein
+
+environment = <'cells:'> spaces env_description
+<env_description> = cells spaces <'in'> spaces symbol spaces? strings? | 'none'
+strings = string (spaces string)*
+cells = symbol cell_mutations
+cell_mutations = cell_mutation*
+cell_mutation = <'<'> (symbol <'~'> symbol | oprotein) <'>'>
+
+source = <'source:'> spaces? pmid <#'\([DR]\)'>? figures
+pmid = nat
+figures = (<'-'> ('Fig' | 'Table' | figs))*
+<figs> = figure (<','> figure)*
+<figure> = #'S?\d*[A-Za-z]?(\[[lrtbm]+\])?'
+
+times = <'times:'> spaces? timepoints spaces unit
+timepoints = timepoint (spaces timepoint)*
+timepoint = #'\d+' #'\+*'
+unit = symbol
+
+extra = extra_name <':'> spaces extra_treat spaces? bkg? |
+        req_adjective? 'reqs' <':'> spaces reqs_body spaces? bkg? |
+        'does not req' <':'> spaces reqs_body spaces? bkg?
+
+bkg = 'no-bkg-control' | 'affects-bkg'
+
+<extra_name> = enhanced_adjective? 'enhanced by' |
+               inhib_adjective? 'inhibited by' |
+               req_adjective? 'repressed by' |
+               inhib_adjective? 'reversed by' |
+               'unaffected by'
+
+<enhanced_adjective> = ('slightly' | 'syn-' | 'synergistically' | 'bkg') spaces?
+<inhib_adjective> = ('partially' | 'slightly' | 'bkg') spaces?
+<req_adjective> = ('partially' | 'bkg') spaces?
+
+<extra_treat> = streatment spaces addition_mode |
+                stim spaces stim_mode |
+                substitution spaces sub_mode
+
+<reqs_body> = ktreatment |
+              'both' spaces #'\[omissions?\]'
+
+addition_mode = <'['> ('chem' / 'cotreatment' / 'addition' / 'omission' / symbol) <']'>
+stim_mode = <'['> ('prestim' | 'costim' | 'stim' | 'pretreatment' | 'stress' | 'preconditioning' | 'posttreatment') <']'>
+sub_mode = <'['> ('substitution' | 'knockin') <']'>
+
+stim = streatment (spaces <'('> stim_times <')'>)?
+stim_times = numlist spaces symbol | 'tnr' | 'tbg'
+<numlist> = nat (spaces? <','> spaces? nat)*
+substitution = streat_x_or_o
+
+oligo = <'oligo:'> spaces oligo_body
+<oligo_body> = oligo_str spaces? oligo_seq?
+<oligo_str> = string | symbol
+oligo_seq = #'5-[ATCG ]+-3' / symbol
+
+ip = #'IP[12s]?from' <':'> spaces? env_description;
+
+meta = <'meta:'> spaces? rest_of_line
+comment = <'comment:'> spaces? rest_of_line
+
+string = <'"'> #'[^"]*' <'"'>
+symbol = #'[\w\.\?!\\\-]+'
+<rest_of_line> = #'[^\n]*'
+<spaces> = <#' +'>
+<plus> = spaces <'+'> spaces
+<nat> = #'\d+'
+<letter> = #'[A-Za-z]'
+<line_prefix> = <'  ***'> spaces
+<newline> = <#'\n'>
