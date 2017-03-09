@@ -1,7 +1,7 @@
 datum = line_prefix firstline newline lines
 
 <firstline> = cfirstline | sfirstline
-<cfirstline> = (subject spaces)? assay spaces <'is'> spaces change spaces ctreatment
+cfirstline = (subject spaces)? assay spaces <'is'> spaces change spaces ctreatment
 <ctreatment> = 'irt' spaces treatments (spaces? stimes)? |
                'by' spaces treatments |
                'itpo' spaces xtreatments |
@@ -11,7 +11,7 @@ change = ('slightly' | 'detectable-but')? spaces?
 stimes = <'('> (nat spaces symbol | excuse) <')'>
 excuse = 'tnr' | 'times' | 'tbg'
 
-<sfirstline> = (subject spaces)? assay spaces <'is'> spaces schange
+sfirstline = (subject spaces)? assay spaces <'is'> spaces schange
 schange = 'undetectable' | 'detectable'
 
 <lines> = datumline (spaces? newline datumline)*
@@ -23,17 +23,18 @@ subject = symbol / symbol handle / xsprotein / oprotein
 
 xsprotein = oprotein handle 'IP'?
 handle = <'['> symbol <']'>
-oprotein = origin symbol mutations? modification*
-xoprotein = 'x' symbol mutations? modification*
-<origin> = #'[xrpks]?'
-mutations = <'('> pmutation (<'/'> pmutation)* <')'> string?
+oprotein = origin symbol mutations modifications
+<xoprotein> = &'x' oprotein
+origin = #'[xrpks]?'
+mutations = (<'('> pmutation (<'/'> pmutation)* <')'> string?)?
 <pmutation> = mutation | <'('> mutation <')'>
-<mutation> = domain / del_mut / s_mut / r_mut / symbol
+<mutation> = domain / del_mut / s_mut / point / symbol
 del_mut = <'del('> domain <')'>
 s_mut = #'p[TSY]\d{1,4}'
-r_mut = letter nat letter
+point = letter nat letter
 domain = nat <'-'> nat
 
+modifications = modification*
 modification = <'{'> symbol sites <'}'>
 sites = <'('> site (<'/'> site)* <')'>
 site = #'([ACTYSKPNLMVIFDERHQWG]|p[TYS])\d+' | symbol
@@ -58,7 +59,7 @@ lipids = symbol (<'/'> symbol)*
 <treatment> = symbol / oprotein / xsprotein
 <streatment> = streat_treatment
 
-<conjunction> = 'and/or' | 'and' | 'or' | '+'
+conjunction = 'and/or' | 'and' | 'or' | '+'
 
 <streat_treatment> = treatment (spaces conjunction spaces treatment)*
 <streat_x_or_o> = (oprotein / xsprotein) (spaces conjunction spaces (oprotein / xsprotein))*
@@ -77,7 +78,8 @@ ktest = spaces <'['> symbol <']'>
 kte = symbol / oprotein / xsprotein
 
 environment = <'cells:'> spaces env_description
-<env_description> = cells spaces <'in'> spaces symbol spaces? strings? | 'none'
+<env_description> = cells spaces <'in'> spaces medium spaces? strings? | 'none'
+medium = symbol
 strings = string (spaces string)*
 cells = symbol cell_mutations
 cell_mutations = cell_mutation*
@@ -137,7 +139,7 @@ meta = <'meta:'> spaces? rest_of_line
 comment = <'comment:'> spaces? rest_of_line
 
 string = <'"'> #'[^"]*' <'"'>
-symbol = #'[\w\.\?!\\\-]+'
+<symbol> = #'[\w\.\?!\\\-]+'
 <rest_of_line> = #'[^\n]*'
 <spaces> = <#' +'>
 <plus> = spaces <'+'> spaces
