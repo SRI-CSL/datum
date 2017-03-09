@@ -1,0 +1,6 @@
+  *** Nfkb-reporter[Luc] is increased irt (PMA + Ionomycin) (12 hr)
+    *** cells: DT40<RacGap1~null><xRacGap1> in BMLS
+    *** unaffected by: xRacGap1(K182A/R183A/R184A) [substitution]
+    *** unaffected by: xRacGap1(K199A/K200A) [substitution]
+    *** unaffected by: xRacGap1(K182A/R183A/R184A/K199A/K200A) [substitution]
+    *** source: 19158271-Fig-4c
