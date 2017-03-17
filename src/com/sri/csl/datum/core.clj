@@ -1,8 +1,9 @@
-(ns datum-clj.core
+(ns com.sri.csl.datum.core
   (:require [instaparse.core :as insta]
             [clojure.java.io :as io]
             [clojure.string :as str]
-            [datum-clj.ops :as ops]))
+            [clojure.spec :as s]
+            [com.sri.csl.datum.ops :as ops]))
 
 (def parser (insta/parser (clojure.java.io/resource "grammar.bnf")))
 

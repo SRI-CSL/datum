@@ -1,4 +1,4 @@
-(ns datum-clj.ops
+(ns com.sri.csl.datum.ops
   (:require [clojure.java.io :as io]
             [clojure.data.json :as json]
             [clojure.algo.generic.functor :refer [fmap]]))
