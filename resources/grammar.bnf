@@ -1,7 +1,8 @@
 datum = line_prefix firstline newline lines
 
 <firstline> = cfirstline | sfirstline
-cfirstline = (subject spaces)? assay spaces <'is'> spaces change spaces ctreatment
+cfirstline = subject spaces assay spaces <'is'> spaces change spaces ctreatment
+
 <ctreatment> = 'irt' spaces treatments (spaces? stimes)? |
                'by' spaces treatments |
                'itpo' spaces xtreatments |
@@ -11,7 +12,7 @@ change = ('slightly' | 'detectable-but')? spaces?
 stimes = <'('> (nat spaces symbol | excuse) <')'>
 excuse = 'tnr' | 'times' | 'tbg'
 
-sfirstline = (subject spaces)? assay spaces <'is'> spaces schange
+sfirstline = subject spaces assay spaces <'is'> spaces schange
 schange = 'undetectable' | 'detectable'
 
 <lines> = datumline (spaces? newline datumline)*
@@ -19,7 +20,7 @@ schange = 'undetectable' | 'detectable'
               (source | environment | times | extra |
                meta | comment | oligo | ip)
 
-subject = symbol / symbol handle / xsprotein / oprotein
+subject = <'NS'> / symbol / symbol handle / xsprotein / oprotein
 
 xsprotein = oprotein handle 'IP'?
 handle = <'['> symbol <']'>

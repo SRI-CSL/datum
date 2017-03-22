@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.9.0-alpha14"]
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/algo.generic "0.1.2"]
-                 [instaparse "1.4.1"]]
+                 [instaparse "1.4.5"]]
   :main ^:skip-aot com.sri.csl.datum.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

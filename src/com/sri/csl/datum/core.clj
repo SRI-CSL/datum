@@ -5,7 +5,7 @@
             [clojure.spec :as s]
             [com.sri.csl.datum.ops :as ops]))
 
-(def parser (insta/parser (clojure.java.io/resource "grammar.bnf")))
+(insta/defparser parser (slurp (clojure.java.io/resource "grammar.bnf")))
 
 (def test-file (slurp (io/file (io/resource "examples.txt"))))
 (def big-test-file (slurp (io/file (io/resource "6-evidence.txt"))))
@@ -36,7 +36,7 @@
   (pmap parser
         (extract-datums (relevant-lines file))))
 
-(def test-datum "  *** Nfkb-reporter[Luc] is increased irt (PMA + Ionomycin) (12 hr)
+(def test-datum "  *** NS Nfkb-reporter[Luc] is increased irt (PMA + Ionomycin) (12 hr)
     *** cells: DT40<RacGap1~null><xRacGap1> in BMLS
     *** unaffected by: xRacGap1(K182A/R183A/R184A) [substitution]
     *** unaffected by: xRacGap1(K199A/K200A) [substitution]
