@@ -21,3 +21,9 @@
   (if-let [{:keys [elements]} (datumsorts sort)]
     (elements op)))
 
+(defn sorts [op]
+  (map first
+       (filter
+        (fn [[sort {elements :elements}]]
+          (elements op))
+        datumsorts)))
