@@ -174,10 +174,10 @@ substitution = streat_x_or_o
 
 oligo = <'oligo:'> spaces oligo_body
 <oligo_body> = oligo_str spaces? oligo_seq?
-<oligo_str> = string | symbol
+oligo_str = string | symbol
 oligo_seq = #'5-[ATCG ]+-3' / symbol
 
-ipfrom = #'IP[12s]?from' <':'> spaces? env_description;
+ipfrom = <#'IP[12s]?from'> <':'> spaces? env_description;
 
 meta = <'meta:'> spaces? rest_of_line
 comment = <'comment:'> spaces? rest_of_line

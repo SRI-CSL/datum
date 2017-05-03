@@ -2,9 +2,11 @@
 
 (defn placeholder [type] (constantly {type :placeholder}))
 
-(defn named-merge [name]
-  (fn [& values]
-    {name (apply merge {} values)}))
+(defn named-merge
+  ([name] (named-merge name {}))
+  ([name adds]
+   (fn [& values]
+     {name (apply merge adds values)})))
 
 (defn component [name]
   (fn

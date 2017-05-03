@@ -32,6 +32,12 @@
    :times (c/named-merge :times)
    :stpt stpt
    :excuse (c/component :excuse)
+   
+   :oligo (c/named-merge :extra {:type "oligo"})
+   :oligo_str (c/component :name)
+   :oligo_seq (c/component :sequence)
+
+   :ipfrom (c/named-merge :extra {:type "ipfrom"})
 
    :ip ip
    :handle (c/component :handle)})
