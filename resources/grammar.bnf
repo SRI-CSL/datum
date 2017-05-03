@@ -3,13 +3,15 @@ datum = line_prefix firstline newline lines
 <firstline> = cfirstline | sfirstline
 cfirstline = subject spaces assay spaces <'is'> spaces change spaces ctreatment
 
-<ctreatment> = 'irt' spaces treatments (spaces? stimes)? |
-               'by' spaces treatments |
-               'itpo' spaces xtreatments |
-               'itao' spaces ktreatment
+<ctreatment> = &'irt' changetype spaces treatments (spaces? stimes)? |
+               &'by' changetype spaces treatments |
+               &'itpo' changetype spaces xtreatments |
+               &'itao' changetype spaces ktreatment
+changetype = symbol
 change = ('slightly' | 'detectable-but')? spaces?
          ('increased' | 'decreased' | 'unchanged')
-stimes = <'('> (nat spaces symbol | excuse) <')'>
+stimes = <'('> (stpt | excuse) <')'>
+stpt = nat spaces symbol
 excuse = 'tnr' | 'times' | 'tbg'
 
 sfirstline = subject spaces assay spaces <'is'> spaces schange
@@ -18,56 +20,89 @@ schange = 'undetectable' | 'detectable'
 <lines> = datumline (spaces? newline datumline)*
 <datumline> = <'  '> line_prefix
               (source | environment | times | extra |
-               meta | comment | oligo | ip)
+               meta | comment | oligo | ipfrom)
 
-subject = <'NS'> / symbol / symbol handle / xsprotein / oprotein
+(*
+  A subject can be one of the following:
+    - No subject at all
+    - An oprotein with origin r/p/s
+    - A protein with any other origin, plus a handle and IP
+    - A chemical with a handle
+    - A gene
+*)
+subject = <'NS'> /
+          &#'[rps]' oprotein /
+          chemical handle /
+          oprotein handle ip /
+          gene
 
-xsprotein = oprotein handle 'IP'?
+chemical = simple_symbol
+gene = simple_symbol
+<simple_symbol> = !#'[xrpks]' symbol
+
+xsprotein = xoprotein handle ip
+ip = 'IP'?
 handle = <'['> symbol <']'>
-oprotein = origin symbol mutations modifications
+oprotein = origin protein mutations modifications
+protein = symbol
 <xoprotein> = &'x' oprotein
 origin = #'[xrpks]?'
-mutations = (<'('> pmutation (<'/'> pmutation)* <')'> string?)?
+mutations = (<'('> pmutation (<'/'> pmutation)* <')'> mutation_string?)?
 <pmutation> = mutation | <'('> mutation <')'>
-<mutation> = domain / del_mut / s_mut / point / symbol
+<mutation> = domain / del_mut / s_mut / point / symbol_mut
 del_mut = <'del('> domain <')'>
 s_mut = #'p[TSY]\d{1,4}'
 point = letter nat letter
 domain = nat <'-'> nat
+symbol_mut = symbol
+mutation_string = string
 
 modifications = modification*
-modification = <'{'> symbol sites <'}'>
+modification = <'{'> mod_symbol sites <'}'>
+mod_symbol = symbol
 sites = <'('> site (<'/'> site)* <')'>
-site = #'([ACTYSKPNLMVIFDERHQWG]|p[TYS])\d+' | symbol
+<site> = #'([ACTYSKPNLMVIFDERHQWG]|p[TYS])\d+' | symbol
 
-assay = ivka | ivlka | oligo_binding | locatedin | infraction | phos | boundto | modification_assay | binding
+assay = ivka / ivlka / activity_assay / oligo_binding / locatedin / infraction / phos / boundto / modification_assay / binding
 detect = <'['> symbol <']'>
+assay_sym = symbol
+
+modification_assay = assay_sym sites? detect
+
+binding = assay_sym detect spaces hooks
+hooks = <'('> hook (plus hook)* <')'> | hook (plus hook)*
+hook = (hook_entity / oprotein) handle ip
+hook_entity = symbol
+
 ivka = <'IVKA('> substrates <')'> sites? detect
 ivlka = <'IVLKA('> lipids <')'> detect
-activity_assay = ('IVGefA' | 'IVPPaseAct' | 'IVHatAct' | 'IVProteaseAct') <'('> symbol <')'>
-oligo_binding = <'oligo-binding'> detect
-locatedin = <'locatedin('> symbol <')'> detect
-infraction = <'infraction('> symbol <')'> detect
-phos = ('ST' | #'[STY]') <'phos'> detect
-boundto = <'boundto('> symbol <')'> detect
-modification_assay = symbol sites? detect
-binding = symbol detect spaces hooks
-hooks = <'('> hook (plus hook)* <')'> | hook (plus hook)*
-hook = ('oligo' / symbol / oprotein) <'['> symbol <']'> 'IP'?
 substrates = symbol (<#'[/,]'> symbol)*
 lipids = symbol (<'/'> symbol)*
 
+activity_assay = activity <'('> substrates <')'> detect
+activity = ('IVGefA' | 'IVPPaseAct' | 'IVHatAct' | 'IVProteaseAct' | 'IVHDACAct')
+
+locatedin = <'locatedin('> position <')'> detect
+infraction = <'infraction('> fraction <')'> detect
+boundto = <'boundto('> gene <')'> detect
+position = symbol
+fraction = symbol
+gene = symbol
+
+oligo_binding = <'oligo-binding'> detect
+phos = phostype <'phos'> detect
+phostype = ('ST' | #'[STY]')
+
 <treatment> = symbol / oprotein / xsprotein
-<streatment> = streat_treatment
+<streatment> = treatment (spaces conjunction spaces treatment)*
 
 conjunction = 'and/or' | 'and' | 'or' | '+'
 
-<streat_treatment> = treatment (spaces conjunction spaces treatment)*
 <streat_x_or_o> = (oprotein / xsprotein) (spaces conjunction spaces (oprotein / xsprotein))*
 <streat_ox> = xoprotein (spaces conjunction spaces xoprotein)*
 
-treatments = <'('> spaces? streat_treatment spaces? <')'> /
-             streat_treatment
+treatments = <'('> spaces? streatment spaces? <')'> /
+             streatment
 
 xtreatments = <'('> spaces? streat_ox spaces? <')'> /
               streat_ox
@@ -134,12 +169,12 @@ oligo = <'oligo:'> spaces oligo_body
 <oligo_str> = string | symbol
 oligo_seq = #'5-[ATCG ]+-3' / symbol
 
-ip = #'IP[12s]?from' <':'> spaces? env_description;
+ipfrom = #'IP[12s]?from' <':'> spaces? env_description;
 
 meta = <'meta:'> spaces? rest_of_line
 comment = <'comment:'> spaces? rest_of_line
 
-string = <'"'> #'[^"]*' <'"'>
+<string> = <'"'> #'[^"]*' <'"'>
 <symbol> = #'[\w\.\?!\\\-]+'
 <rest_of_line> = #'[^\n]*'
 <spaces> = <#' +'>
