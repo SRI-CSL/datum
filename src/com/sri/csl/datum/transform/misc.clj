@@ -16,8 +16,12 @@
   {:time t
    :unit unit})
 
+(defn change [& vals]
+  {:change (string/join " " vals)})
+
 (def transformers
-  {:comment parse-comment
+  {:change change
+   :comment parse-comment
    :pmid (c/component :pmid)
    :figures (c/multi :figures)
    :source (c/named-merge :source)

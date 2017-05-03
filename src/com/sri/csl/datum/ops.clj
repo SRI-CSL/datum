@@ -17,6 +17,9 @@
        json/read-str
        (fmap parse-sort)))
 
+(def allsorts
+  (reduce clojure.set/union (map (comp :elements second) datumsorts)))
+
 (defn check-op [sort op]
   (if-let [{:keys [elements]} (datumsorts sort)]
     (elements op)))

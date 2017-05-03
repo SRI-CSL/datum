@@ -46,5 +46,3 @@
         (datum/datum text 1 1)
         (dissoc :meta)
         pprint)))
-
-(make-test-datum examples/test-datum-2)

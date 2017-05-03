@@ -96,6 +96,80 @@
     *** reqs: Mlk3 [RNAi]
     *** source: 15258589-Fig-2e")
 
-(def treatments-x "")
+(def treatments-k "  *** Accs[phosAb] phos(MSGLH)[phosAb] is increased itao Akt1 and Akt2 [DKO]
+    *** cells: mEFs in BMLS
+    *** source: 16027121-Fig-2d")
 
-(def treatments-k "")
+;;;; Environment Examples
+;;
+(def env-none "  *** Braf[Ab]IP IVKA(Mek1)(sitenr)[phosAb] is increased irt (anti-Cd3 + anti-IgG) (times)
+    *** cells: none
+    *** times: 0 1+ 3+ 30+ 60+ min
+    *** enhanced by: anti-Cd28 [cotreatment] no-bkg-control
+    *** source: 15339934-Fig-2c")
+
+(def env-null-mut "  *** Braf[Ab]IP IVKA(Mek1)(sitenr)[phosAb] is increased irt (anti-Cd3 + anti-IgG) (times)
+    *** cells: JURKAT<Pten~null> in BMS
+    *** times: 0 1+ 3+ 30+ 60+ min
+    *** enhanced by: anti-Cd28 [cotreatment] no-bkg-control
+    *** source: 15339934-Fig-2c")
+
+(def env-o-mut "  *** Braf[Ab]IP IVKA(Mek1)(sitenr)[phosAb] is increased irt (anti-Cd3 + anti-IgG) (times)
+    *** cells: JURKAT<xRsks> in BMS
+    *** times: 0 1+ 3+ 30+ 60+ min
+    *** enhanced by: anti-Cd28 [cotreatment] no-bkg-control
+    *** source: 15339934-Fig-2c")
+
+(def env-string "  *** S6k1[phosAb] phos(T412)[phosAb] is increased irt AminoAcids + Glucose (30 min)
+    *** cells: MIN6 in BMLS \"Glucose and AminoAcid deprived\"
+    *** unaffected by: Ins (tbg) [stim]
+    *** source: 17287212(D)")
+
+;;;; Extras
+;; slightly enhanced
+(def extra-addition "  *** Braf[Ab]IP IVKA(Mek1)(sitenr)[phosAb] is increased irt (anti-Cd3 + anti-IgG) (times)
+    *** cells: JURKAT<xRsks> in BMS
+    *** times: 0 1+ 3+ 30+ 60+ min
+    *** slightly enhanced by: anti-Cd28 [cotreatment] no-bkg-control
+    *** source: 15339934-Fig-2c")
+
+(def extra-stim "  *** S6k1[phosAb] phos(T412)[phosAb] is increased irt AminoAcids + Glucose (30 min)
+    *** cells: MIN6 in BMLS \"Glucose and AminoAcid deprived\"
+    *** unaffected by: Ins (tbg) [stim]
+    *** source: 17287212(D)")
+
+(def extra-substitution "  *** xPdpk1[tAb]IP Yphos[pYAb] is detectable-but unchanged irt AngII (5 min)
+    *** cells: CHO<xAgtR1><xPdpk1><xSrc(mnr)\"CA\"> in BMS
+    *** unaffected by: xFak2(K457A) [substitution]
+    *** source: 14585963-Fig-5e")
+
+(def extra-reqs-k "  *** xPdpk1[tAb]IP Yphos[pYAb] is increased irt AngII (5 min)
+    *** cells: CHO<xAgtR1><xPdpk1><xFak2> in BMS
+    *** reqs: xFak2 [omission]
+    *** source: 14585963-Fig-3b")
+
+(def extra-reqs-both "  *** Raf1[Ab]IP IVKA(Mek1)[32P-ATP] is increased irt Fn1-adherence + PP2 (times)
+    *** cells: REF52 in BMS
+    *** times: 0 5+ 10+ min
+    *** reqs: both [omission]
+    *** source: 12876277-Fig-8a")
+
+;;;; Misc
+;; Oligo
+
+(def misc-oligo "  *** Stat6[Ab] oligo-binding[EMSA] is unchanged irt IL3 (15 min)
+    *** cells: CTFL15 in BMS
+    *** oligo: \"beta-casein GAS\" 5-AGATTTCTAGGAATTCAAATC-3
+    *** source: 10072514-Fig-2a")
+
+(def misc-ipfrom "  *** xRaf1(306-648)[tAb]IP IVKA(Mek12s)(SMANS)[phosAb] is decreased by PLX4032
+    *** cells: none
+    *** IPfrom: HEK293H<xRaf1(306-648)> in BMS
+    *** source: 20179705-Fig-S8b")
+
+(def misc-ip2from "  *** rRac1{GTPgS} boundby[WB] xMlk3(K144R)[tAb]IP is detectable
+    *** cells: none
+    *** IP1from: HEK293T in BMS
+    *** IP2from: HEK293T in BMS
+    *** inhibited by: rRac1{GDP} [substitution]
+    *** source: 18851832-Fig-S5")

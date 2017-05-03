@@ -93,7 +93,8 @@ oligo_binding = <'oligo-binding'> detect
 phos = phostype <'phos'> detect
 phostype = ('ST' | #'[STY]')
 
-<treatment> = symbol / oprotein / xsprotein
+<treatment> = treat_sym / oprotein / xsprotein
+treat_sym = symbol
 <streatment> = treatment (spaces conjunction spaces treatment)*
 
 conjunction = 'and/or' | 'and' | 'or' | '+'
@@ -107,19 +108,20 @@ treatments = <'('> spaces? streatment spaces? <')'> /
 xtreatments = <'('> spaces? streat_ox spaces? <')'> /
               streat_ox
 
-ktreatment = kte ktest (spaces conjunction spaces kte ktest)* |
-             kte (spaces conjunction spaces kte)* ktest
+ktreatment = treatment ktest (spaces conjunction spaces treatment ktest)* |
+             treatment (spaces conjunction spaces treatment)* ktest
 
 ktest = spaces <'['> symbol <']'>
-kte = symbol / oprotein / xsprotein
 
 environment = <'cells:'> spaces env_description
-<env_description> = cells spaces <'in'> spaces medium spaces? strings? | 'none'
+<env_description> = env_none / cells cell_mutations spaces <'in'> spaces medium spaces? strings?
+cells = symbol
 medium = symbol
+env_none = 'none'
 strings = string (spaces string)*
-cells = symbol cell_mutations
 cell_mutations = cell_mutation*
-cell_mutation = <'<'> (symbol <'~'> symbol | oprotein) <'>'>
+cell_mutation = <'<'> (protein <'~'> mutation_type | oprotein) <'>'>
+mutation_type = symbol
 
 source = <'source:'> spaces? pmid <#'\([DR]\)'>? figures
 pmid = nat
@@ -133,19 +135,21 @@ timepoint = #'\d+' #'\+*'
 unit = symbol
 
 extra = extra_name <':'> spaces extra_treat spaces? bkg? |
-        req_adjective? 'reqs' <':'> spaces reqs_body spaces? bkg? |
-        'does not req' <':'> spaces reqs_body spaces? bkg?
+        req_name <':'> spaces reqs_body spaces? bkg?
 
 bkg = 'no-bkg-control' | 'affects-bkg'
 
-<extra_name> = enhanced_adjective? 'enhanced by' |
-               inhib_adjective? 'inhibited by' |
-               req_adjective? 'repressed by' |
-               inhib_adjective? 'reversed by' |
-               'unaffected by'
+extra_name = enhanced_adjective? 'enhanced by' |
+             inhib_adjective? 'inhibited by' |
+             req_adjective? 'repressed by' |
+             inhib_adjective? 'reversed by' |
+             'unaffected by'
 
 <enhanced_adjective> = ('slightly' | 'syn-' | 'synergistically' | 'bkg') spaces?
 <inhib_adjective> = ('partially' | 'slightly' | 'bkg') spaces?
+
+req_name = req_adjective? 'reqs' /
+           'does not req'
 <req_adjective> = ('partially' | 'bkg') spaces?
 
 <extra_treat> = streatment spaces addition_mode |
@@ -153,14 +157,18 @@ bkg = 'no-bkg-control' | 'affects-bkg'
                 substitution spaces sub_mode
 
 <reqs_body> = ktreatment |
-              'both' spaces #'\[omissions?\]'
+              reqs_type spaces omission
+
+reqs_type = 'both'
+omission = <'['> #'omissions?' <']'>
 
 addition_mode = <'['> ('chem' / 'cotreatment' / 'addition' / 'omission' / symbol) <']'>
 stim_mode = <'['> ('prestim' | 'costim' | 'stim' | 'pretreatment' | 'stress' | 'preconditioning' | 'posttreatment') <']'>
 sub_mode = <'['> ('substitution' | 'knockin') <']'>
 
-stim = streatment (spaces <'('> stim_times <')'>)?
-stim_times = numlist spaces symbol | 'tnr' | 'tbg'
+<stim> = streatment (spaces <'('> (stim_times | stim_time_excuse) <')'>)?
+stim_times = numlist spaces symbol
+stim_time_excuse = 'tnr' | 'tbg'
 <numlist> = nat (spaces? <','> spaces? nat)*
 substitution = streat_x_or_o
 

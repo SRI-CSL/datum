@@ -1,10 +1,11 @@
 (ns com.sri.csl.datum.transform.datum
   (:require [com.sri.csl.datum.transform
-             [firstline :refer [parse-first-line]]
              [misc :as misc]
              [protein :as protein]
              [assay :as assay]
-             [subject :as subject]
+             [treatment :as treatment]
+             [environment :as environment]
+             [extra :as extra]
              [common :as c]]
             [clojure.pprint :refer [pprint]]
             [instaparse.core :as insta]))
@@ -15,13 +16,12 @@
   (merge {:cfirstline (c/simple-merge)
           :sfirstline (c/simple-merge)
           :subject (c/named-merge :subject)
-          :change (c/component :change)
-          :changetype (c/component :treatment_type)
-          :treatments (c/placeholder :treatments)
-          :extra (c/placeholder :extra)
-          :environment (c/placeholder :environment)}
+          :changetype (c/component :treatment_type)}
          protein/transformers
          assay/transformers
+         treatment/transformers
+         environment/transformers
+         extra/transformers
          misc/transformers
          ))
 
