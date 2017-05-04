@@ -5,14 +5,14 @@ cfirstline = subject spaces assay spaces <'is'> spaces change spaces ctreatment
 
 <ctreatment> = &'irt' changetype spaces treatments (spaces? stimes)? |
                &'by' changetype spaces treatments |
-               &'itpo' changetype spaces xtreatments |
+               &'itpo' changetype spaces treatments |
                &'itao' changetype spaces ktreatment
+
 changetype = symbol
-change = ('slightly' | 'detectable-but')? spaces?
-         ('increased' | 'decreased' | 'unchanged')
+change = 'increased' | 'decreased' | ('detectable-but' spaces)? 'unchanged'
 stimes = <'('> (stpt | excuse) <')'>
 stpt = nat spaces symbol
-excuse = 'tnr' | 'times' | 'tbg'
+excuse = 'tnr' | 'times'
 
 sfirstline = subject spaces assay spaces <'is'> spaces schange
 schange = 'undetectable' | 'detectable'
@@ -20,7 +20,7 @@ schange = 'undetectable' | 'detectable'
 <lines> = datumline (spaces? newline datumline)*
 <datumline> = <'  '> line_prefix
               (source | environment | times | extra |
-               meta | comment | oligo | ipfrom)
+               meta | comment | oligo | ipfrom) spaces?
 
 (*
   A subject can be one of the following:
@@ -40,13 +40,18 @@ chemical = simple_symbol
 gene = simple_symbol
 <simple_symbol> = !#'[xrpks]' symbol
 
-xsprotein = xoprotein handle ip
+<xsprotein> = &'x' oprotein handle ip
 ip = 'IP'?
 handle = <'['> symbol <']'>
+
+(*
+  TODO - Document proteins
+*)
 oprotein = origin protein mutations modifications
-protein = symbol
-<xoprotein> = &'x' oprotein
+
 origin = #'[xrpks]?'
+protein = symbol
+
 mutations = (<'('> pmutation (<'/'> pmutation)* <')'> mutation_string?)?
 <pmutation> = mutation | <'('> mutation <')'>
 <mutation> = domain / del_mut / s_mut / point / symbol_mut
@@ -58,11 +63,14 @@ symbol_mut = symbol
 mutation_string = string
 
 modifications = modification*
-modification = <'{'> mod_symbol sites <'}'>
+modification = <'{'> mod_symbol sites? <'}'>
 mod_symbol = symbol
 sites = <'('> site (<'/'> site)* <')'>
 <site> = #'([ACTYSKPNLMVIFDERHQWG]|p[TYS])\d+' | symbol
 
+(*
+  TODO - Document assays
+*)
 assay = ivka / ivlka / activity_assay / oligo_binding / locatedin / infraction / phos / boundto / modification_assay / binding
 detect = <'['> symbol <']'>
 assay_sym = symbol
@@ -93,92 +101,106 @@ oligo_binding = <'oligo-binding'> detect
 phos = phostype <'phos'> detect
 phostype = ('ST' | #'[STY]')
 
+(*
+  TODO - Document treatments
+*)
 <treatment> = treat_sym / oprotein / xsprotein
 treat_sym = symbol
 <streatment> = treatment (spaces conjunction spaces treatment)*
 
 conjunction = 'and/or' | 'and' | 'or' | '+'
 
-<streat_x_or_o> = (oprotein / xsprotein) (spaces conjunction spaces (oprotein / xsprotein))*
-<streat_ox> = xoprotein (spaces conjunction spaces xoprotein)*
-
 treatments = <'('> spaces? streatment spaces? <')'> /
              streatment
-
-xtreatments = <'('> spaces? streat_ox spaces? <')'> /
-              streat_ox
 
 ktreatment = treatment ktest (spaces conjunction spaces treatment ktest)* |
              treatment (spaces conjunction spaces treatment)* ktest
 
 ktest = spaces <'['> symbol <']'>
 
+(*
+  TODO - Document environments
+*)
 environment = <'cells:'> spaces env_description
+ipfrom = <#'IP[12s]?from'> <':'> spaces? env_description;
+
 <env_description> = env_none / cells cell_mutations spaces <'in'> spaces medium spaces? strings?
+
 cells = symbol
 medium = symbol
 env_none = 'none'
+
 strings = string (spaces string)*
+
 cell_mutations = cell_mutation*
 cell_mutation = <'<'> (protein <'~'> mutation_type | oprotein) <'>'>
 mutation_type = symbol
 
+(*
+  TODO - Document sources
+*)
 source = <'source:'> spaces? pmid <#'\([DR]\)'>? figures
 pmid = nat
 figures = (<'-'> ('Fig' | 'Table' | figs))*
 <figs> = figure (<','> figure)*
 <figure> = #'S?\d*[A-Za-z]?(\[[lrtbm]+\])?'
 
+(*
+  TODO - Document times
+*)
 times = <'times:'> spaces? timepoints spaces unit
 timepoints = timepoint (spaces timepoint)*
 timepoint = #'\d+' #'\+*'
 unit = symbol
 
-extra = extra_name <':'> spaces extra_treat spaces? bkg? |
-        req_name <':'> spaces reqs_body spaces? bkg?
+(*
+  TODO - Document extras
+*)
+extra = extra_name <' by:'> spaces extra_treat |
+        req_name <':'> spaces reqs_body
 
-bkg = 'no-bkg-control' | 'affects-bkg'
+extra_name = 'enhanced' |
+             'inhibited' |
+             'repressed' |
+             'reversed' |
+             'unaffected'
 
-extra_name = enhanced_adjective? 'enhanced by' |
-             inhib_adjective? 'inhibited by' |
-             req_adjective? 'repressed by' |
-             inhib_adjective? 'reversed by' |
-             'unaffected by'
 
-<enhanced_adjective> = ('slightly' | 'syn-' | 'synergistically' | 'bkg') spaces?
-<inhib_adjective> = ('partially' | 'slightly' | 'bkg') spaces?
+<extra_treat> = streatment stim_times? spaces <'['> addition_mode <']'> |
+                streatment spaces <'['> sub_mode <']'>
 
-req_name = req_adjective? 'reqs' /
-           'does not req'
-<req_adjective> = ('partially' | 'bkg') spaces?
+addition_mode = 'addition' /
+                'cotreatment' /
+                'omission' /
+                'pretreatment' /
+                'posttreatment' /
+                symbol
 
-<extra_treat> = streatment spaces addition_mode |
-                stim spaces stim_mode |
-                substitution spaces sub_mode
+stim_times = stim_times_list | stim_times_excuse
+stim_times_list = numlist spaces symbol
+stim_time_excuse = 'tnr'
+<numlist> = nat (spaces? <','> spaces? nat)*
 
+sub_mode = 'substitution' /
+           'knockin'
+
+req_name = 'reqs' / 'does not req'
 <reqs_body> = ktreatment |
               reqs_type spaces omission
-
 reqs_type = 'both'
 omission = <'['> #'omissions?' <']'>
 
-addition_mode = <'['> ('chem' / 'cotreatment' / 'addition' / 'omission' / symbol) <']'>
-stim_mode = <'['> ('prestim' | 'costim' | 'stim' | 'pretreatment' | 'stress' | 'preconditioning' | 'posttreatment') <']'>
-sub_mode = <'['> ('substitution' | 'knockin') <']'>
-
-<stim> = streatment (spaces <'('> (stim_times | stim_time_excuse) <')'>)?
-stim_times = numlist spaces symbol
-stim_time_excuse = 'tnr' | 'tbg'
-<numlist> = nat (spaces? <','> spaces? nat)*
-substitution = streat_x_or_o
-
+(*
+  TODO - Document oligos
+*)
 oligo = <'oligo:'> spaces oligo_body
 <oligo_body> = oligo_str spaces? oligo_seq?
 oligo_str = string | symbol
 oligo_seq = #'5-[ATCG ]+-3' / symbol
 
-ipfrom = <#'IP[12s]?from'> <':'> spaces? env_description;
-
+(*
+  TODO - Document meta/comments
+*)
 meta = <'meta:'> spaces? rest_of_line
 comment = <'comment:'> spaces? rest_of_line
 
