@@ -35,10 +35,6 @@
             @counter)
           lines))))
 
-(defn parse-file [file]
-  (pmap parser
-        (extract-datums (relevant-lines file))))
-
 (defn make-test-datum [text]
   (let [ast (parser text)]
     (pprint ast)
@@ -46,3 +42,25 @@
         (datum/datum text 1 1)
         (dissoc :meta)
         pprint)))
+
+(defn parse-datum [text filename line]
+  (let [ast (parser text)
+        result {:meta {:text text
+                       :filename filename
+                       :line line}}]
+    (if (insta/failure? ast)
+      (assoc result :parse-error ast)
+      (try
+        (merge result (datum/datum ast))
+        (catch Exception e
+          (assoc result :transform-error e))))))
+
+(defn parse-file [file]
+  (pmap #(parse-datum % 1 1)
+       (extract-datums (relevant-lines file))))
+
+(defn display-parse-error [err]
+  (-> err :meta :text println)
+  (println)
+  (-> err :parse-error println)
+  (println))

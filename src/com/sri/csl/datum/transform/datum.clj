@@ -25,18 +25,11 @@
          misc/transformers
          ))
 
-(defn datum [ast text file line]
+(defn datum [ast]
   (let [transformed-ast (insta/transform (transformers) ast)
-        [_ & lines] transformed-ast]
-    (println)
-    (pprint transformed-ast)
-    (println)
+        lines (rest transformed-ast)]
     (apply merge
-           {:meta {:ast ast
-                   :fulltext text
-                   :file file
-                   :line line}
-            :extras (filterv :extra lines)
+           {:extras (filterv :extra lines)
             :comments (mapv :comment (filter :comment lines))}
            (filter singleton? lines))))
 
