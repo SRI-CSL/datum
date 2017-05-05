@@ -3,7 +3,7 @@
 
 (defn simple-assay [name]
   (fn [& parts]
-    (apply merge {:assay-type name} parts)))
+    (apply merge {:assay name} parts)))
 
 (def transformers
   {:detect (c/component :detect)
@@ -15,8 +15,6 @@
 
    :modification_assay (simple-assay :modification)
    :binding (simple-assay :binding)
-   :ivka (simple-assay :ivka)
-   :ivlka (simple-assay :ivlka)
    :activity_assay (simple-assay :activity)
    :activity (c/component :assay)
 
@@ -27,7 +25,6 @@
    :fraction (c/component :fraction)
    :gene (c/component :gene)
 
-   :oligo_binding (simple-assay :oligo-binding)
    :phos (simple-assay :phos)
    :phostype (c/component :phostype)
    })

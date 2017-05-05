@@ -71,38 +71,34 @@ sites = <'('> site (<'/'> site)* <')'>
 (*
   TODO - Document assays
 *)
-assay = ivka / ivlka / activity_assay / oligo_binding / locatedin / infraction / phos / boundto / modification_assay / binding
+assay = activity_assay / locatedin / infraction / boundto / phos / generic_assay / binding
 detect = <'['> symbol <']'>
 assay_sym = symbol
 
-modification_assay = assay_sym sites? detect
+activity_assay = activity <'('> substrates <')'> sites? detect
+activity = ('IVKA' | 'IVLKA' | 'IVGefA' | 'IVPPaseAct' | 'IVHatAct' | 'IVProteaseAct' | 'IVHDACAct')
+substrates = symbol (<#'[/,]'> symbol)*
+
+locatedin = &'locatedin' assay_sym <'('> position <')'> detect
+infraction = &'infraction' assay_sym <'('> fraction <')'> detect
+boundto = &'boundto' assay_sym <'('> gene <')'> detect
+position = symbol
+fraction = symbol
+gene = symbol
+
+phos = phostype &'phos' assay_sym detect
+phostype = 'ST' | #'[STY]'
+
+generic_assay = assay_sym sites? detect
 
 binding = assay_sym detect spaces hooks
 hooks = <'('> hook (plus hook)* <')'> | hook (plus hook)*
 hook = (hook_entity / oprotein) handle ip
 hook_entity = symbol
 
-ivka = <'IVKA('> substrates <')'> sites? detect
-ivlka = <'IVLKA('> lipids <')'> detect
-substrates = symbol (<#'[/,]'> symbol)*
-lipids = symbol (<'/'> symbol)*
-
-activity_assay = activity <'('> substrates <')'> detect
-activity = ('IVGefA' | 'IVPPaseAct' | 'IVHatAct' | 'IVProteaseAct' | 'IVHDACAct')
-
-locatedin = <'locatedin('> position <')'> detect
-infraction = <'infraction('> fraction <')'> detect
-boundto = <'boundto('> gene <')'> detect
-position = symbol
-fraction = symbol
-gene = symbol
-
-oligo_binding = <'oligo-binding'> detect
-phos = phostype <'phos'> detect
-phostype = ('ST' | #'[STY]')
-
 (*
   TODO - Document treatments
+  treat_sym can be Antibody, Stress, or Chemical
 *)
 <treatment> = treat_sym / oprotein / xsprotein
 treat_sym = symbol
@@ -121,16 +117,16 @@ ktest = spaces <'['> symbol <']'>
 (*
   TODO - Document environments
 *)
-environment = <'cells:'> spaces env_description
+environment = <'cells:'> spaces? env_description
 ipfrom = <#'IP[12s]?from'> <':'> spaces? env_description;
 
-<env_description> = env_none / cells cell_mutations spaces <'in'> spaces medium spaces? strings?
+<env_description> = env_none / cells cell_mutations spaces <'in'> spaces medium strings?
 
 cells = symbol
 medium = symbol
 env_none = 'none'
 
-strings = string (spaces string)*
+strings = (spaces string)*
 
 cell_mutations = cell_mutation*
 cell_mutation = <'<'> (protein <'~'> mutation_type | oprotein) <'>'>
@@ -165,7 +161,6 @@ extra_name = 'enhanced' |
              'reversed' |
              'unaffected'
 
-
 <extra_treat> = streatment stim_times? spaces <'['> addition_mode <']'> |
                 streatment spaces <'['> sub_mode <']'>
 
@@ -177,7 +172,7 @@ addition_mode = 'addition' /
                 symbol
 
 stim_times = stim_times_list | stim_times_excuse
-stim_times_list = numlist spaces symbol
+stim_times_list = numlist spaces unit
 stim_time_excuse = 'tnr'
 <numlist> = nat (spaces? <','> spaces? nat)*
 
