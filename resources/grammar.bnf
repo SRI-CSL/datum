@@ -152,7 +152,7 @@ unit = symbol
 (*
   TODO - Document extras
 *)
-extra = extra_name <' by:'> spaces extra_treat |
+extra = extra_name <' by:'> spaces extra_body |
         req_name <':'> spaces reqs_body
 
 extra_name = 'enhanced' |
@@ -161,8 +161,9 @@ extra_name = 'enhanced' |
              'reversed' |
              'unaffected'
 
-<extra_treat> = streatment stim_times? spaces <'['> addition_mode <']'> |
-                streatment spaces <'['> sub_mode <']'>
+<extra_body> = (extra_treat spaces <'['> sub_mode <']'>) /
+               (extra_treat (spaces stim_times)? spaces <'['> addition_mode <']'>)
+extra_treat = streatment
 
 addition_mode = 'addition' /
                 'cotreatment' /
@@ -171,10 +172,9 @@ addition_mode = 'addition' /
                 'posttreatment' /
                 symbol
 
-stim_times = stim_times_list | stim_times_excuse
-stim_times_list = numlist spaces unit
-stim_time_excuse = 'tnr'
-<numlist> = nat (spaces? <','> spaces? nat)*
+stim_times = <'('> (numlist spaces unit | stim_times_excuse) <')'>
+numlist = nat (spaces? <','> spaces? nat)*
+stim_times_excuse = 'tnr'
 
 sub_mode = 'substitution' /
            'knockin'

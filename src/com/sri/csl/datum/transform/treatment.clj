@@ -21,9 +21,9 @@
   (let [treats (remove (some-fn :conjunction :test) vals)
         tests (mapv :test (filter :test vals))
         conjs (into #{} (map :conjunction (filter :conjunction vals)))
-        cj (if (= 1 (count conjs))
-             (first conjs)
-             :inconsistent)]
+        cj (if (> (count conjs) 1)
+             :inconsistent
+             (first conjs))]
     {:treatment {:treatments (into [] treats)
                  :tests tests
                  :conjunction cj}}))
@@ -33,5 +33,6 @@
    :ktest (c/component :test)
    :conjunction (c/component :conjunction)
    :treatments treatments
-   :xtreatments treatments
-   :ktreatment treatments})
+   :ktreatment treatments
+   :extra_treat treatments
+   :substitution treatments})

@@ -39,5 +39,7 @@
 
    :ipfrom (c/named-merge :extra {:type "ipfrom"})
 
+   :strings (c/multi :strings)
+
    :ip ip
    :handle (c/component :handle)})

@@ -8,15 +8,10 @@
 (def transformers
   {:detect (c/component :detect)
    :assay_sym (c/component :assay)
-   :hooks (c/multi :hooks)
-   :hook (c/simple-merge)
-   :hook_entity (c/component :entity)
-   :substrates (c/multi :substrates)
 
-   :modification_assay (simple-assay :modification)
-   :binding (simple-assay :binding)
    :activity_assay (simple-assay :activity)
    :activity (c/component :assay)
+   :substrates (c/multi :substrates)
 
    :locatedin (simple-assay :locatedin)
    :infraction (simple-assay :infraction)
@@ -27,5 +22,11 @@
 
    :phos (simple-assay :phos)
    :phostype (c/component :phostype)
-   })
+
+   :generic_assay (simple-assay :generic)
+
+   :binding (simple-assay :binding)
+   :hooks (c/multi :hooks)
+   :hook (c/simple-merge)
+   :hook_entity (c/component :entity)})
 
