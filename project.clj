@@ -1,8 +1,8 @@
-(defproject datum "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
-  :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
+(defproject datum "0.1.0"
+  :description "A parser for biology experiment result shorthand."
+  :url "http://pl.csl.sri.com/datumkb.html"
+  :license {:name "MIT"
+            :url "https://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.9.0-alpha14"]
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/algo.generic "0.1.2"]
