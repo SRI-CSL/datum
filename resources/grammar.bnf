@@ -38,7 +38,7 @@ subject = <'NS'> /
 
 chemical = simple_symbol
 gene = simple_symbol
-<simple_symbol> = !#'[xrpks]' symbol
+<simple_symbol> = !#'[xbrpks]' symbol
 
 <xsprotein> = &'x' oprotein handle ip
 ip = 'IP'?
@@ -49,7 +49,7 @@ handle = <'['> symbol <']'>
 *)
 oprotein = origin protein mutations modifications
 
-origin = #'[xrpks]?'
+origin = #'[xbrpks]?'
 protein = symbol
 
 mutations = (<'('> pmutation (<'/'> pmutation)* <')'> mutation_string?)?

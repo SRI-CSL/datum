@@ -31,6 +31,7 @@
 
 (def origins
   {"" "endogenous"
+   "b" "baculovirus"
    "x" "expressed"
    "r" "recombinant"
    "p" "purified"
