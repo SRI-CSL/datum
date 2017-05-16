@@ -186,18 +186,20 @@ reqs_type = 'both'
 omission = <'['> #'omissions?' <']'>
 
 (*
-  TODO - Document oligos
+  Oligos have the following format, but are currently treated as comments
+
+  oligo = <'oligo:'> spaces oligo_body
+  <oligo_body> = oligo_str spaces? oligo_seq?
+  oligo_str = string | symbol
+  oligo_seq = #'5-[ATCG ]+-3' / symbol
 *)
-oligo = <'oligo:'> spaces oligo_body
-<oligo_body> = oligo_str spaces? oligo_seq?
-oligo_str = string | symbol
-oligo_seq = #'5-[ATCG ]+-3' / symbol
+oligo = <'oligo:'> spaces? rest_of_line
 
 (*
   TODO - Document meta/comments
 *)
-meta = <'meta:'> spaces? rest_of_line
 comment = <'comment:'> spaces? rest_of_line
+meta = <'meta:'> spaces? rest_of_line
 
 <string> = <'"'> #'[^"]*' <'"'>
 <symbol> = #'[\w\.\?!\\\-]+'

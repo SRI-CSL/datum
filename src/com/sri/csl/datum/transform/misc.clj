@@ -5,6 +5,9 @@
 (defn parse-comment [text]
   {:comment (string/trim text)})
 
+(defn oligo [text]
+  {:comment (string/trim (str "oligo: " text))})
+
 (defn timepoint [tpt & mag]
   [tpt (count mag)])
 
@@ -36,11 +39,13 @@
    :stpt stpt
    :excuse (c/component :excuse)
    
-   :oligo (c/named-merge :extra {:type "oligo"})
-   :oligo_str (c/component :name)
-   :oligo_seq (c/component :sequence)
+   ;; Oligo currently treated as comment
+   :oligo oligo
+   ;; :oligo (c/named-merge :extra {:type "oligo"})
+   ;; :oligo_str (c/component :name)
+   ;; :oligo_seq (c/component :sequence)
 
-   :ipfrom (c/named-merge :extra {:type "ipfrom"})
+   :ipfrom (c/named-merge :ipfrom)
 
    :strings (c/multi :strings)
 

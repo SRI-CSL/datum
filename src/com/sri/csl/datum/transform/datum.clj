@@ -11,7 +11,11 @@
             [clojure.pprint :refer [pprint]]
             [instaparse.core :as insta]))
 
-(defn singleton? [line] (not (or (:extra line) (:comment line))))
+(defn singleton? [line]
+  (not (or
+        (:extra line)
+        (:comment line)
+        (:ipfrom line))))
 
 (defn transformers []
   (merge {:cfirstline (c/simple-merge)
@@ -32,6 +36,7 @@
     (postprocess
      (apply merge
             {:extras (filterv :extra lines)
+             :ipfrom (mapv :ipfrom (filter :ipfrom lines))
              :comments (mapv :comment (filter :comment lines))}
             (filter singleton? lines)))))
 
