@@ -6,7 +6,7 @@
   {:comment (string/trim text)})
 
 (defn oligo [text]
-  {:comment (string/trim (str "oligo: " text))})
+  {:comment (string/trim (str "oligo:" text))})
 
 (defn timepoint [tpt & mag]
   [tpt (count mag)])
