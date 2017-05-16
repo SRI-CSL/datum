@@ -1,5 +1,6 @@
 (ns com.sri.csl.datum.transform.datum
   (:require [com.sri.csl.datum.transform
+             [postprocess :refer [postprocess]]
              [misc :as misc]
              [protein :as protein]
              [assay :as assay]
@@ -28,8 +29,10 @@
 (defn datum [ast]
   (let [transformed-ast (insta/transform (transformers) ast)
         lines (rest transformed-ast)]
-    (apply merge
-           {:extras (filterv :extra lines)
-            :comments (mapv :comment (filter :comment lines))}
-           (filter singleton? lines))))
+    (postprocess
+     (apply merge
+            {:extras (filterv :extra lines)
+             :comments (mapv :comment (filter :comment lines))}
+            (filter singleton? lines)))))
+
 

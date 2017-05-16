@@ -11,7 +11,7 @@ cfirstline = subject spaces assay spaces <'is'> spaces change spaces ctreatment
 changetype = symbol
 change = 'increased' | 'decreased' | ('detectable-but' spaces)? 'unchanged'
 stimes = <'('> (stpt | excuse) <')'>
-stpt = nat spaces symbol
+stpt = num spaces symbol
 excuse = 'tnr' | 'times'
 
 sfirstline = subject spaces assay spaces <'is'> spaces schange
@@ -146,7 +146,7 @@ figures = (<'-'> ('Fig' | 'Table' | figs))*
 *)
 times = <'times:'> spaces? timepoints spaces unit
 timepoints = timepoint (spaces timepoint)*
-timepoint = #'\d+' #'\+*'
+timepoint = num '+'*
 unit = symbol
 
 (*
@@ -204,7 +204,8 @@ comment = <'comment:'> spaces? rest_of_line
 <rest_of_line> = #'[^\n]*'
 <spaces> = <#' +'>
 <plus> = spaces <'+'> spaces
-<nat> = #'\d+'
+nat = #'\d+'
+num = #'\d+(\.\d+)?'
 <letter> = #'[A-Za-z]'
 <line_prefix> = <'  ***'> spaces
 <newline> = <#'\n'>

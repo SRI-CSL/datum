@@ -5,8 +5,8 @@
 (defn parse-comment [text]
   {:comment (string/trim text)})
 
-(defn timepoint [tpt mag]
-  [(Integer. tpt) (.length mag)])
+(defn timepoint [tpt & mag]
+  [tpt (count mag)])
 
 (defn ip
   ([] {:ip false})
@@ -25,6 +25,9 @@
    :pmid (c/component :pmid)
    :figures (c/multi :figures)
    :source (c/named-merge :source)
+
+   :nat #(Integer. %)
+   :num #(Double. %)
 
    :timepoint timepoint
    :timepoints (c/multi :times)
