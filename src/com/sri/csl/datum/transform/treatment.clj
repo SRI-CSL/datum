@@ -33,5 +33,4 @@
    :conjunction (c/component :conjunction)
    :treatments treatments
    :ktreatment treatments
-   :extra_treat treatments
    :substitution treatments})

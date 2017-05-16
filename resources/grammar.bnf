@@ -101,12 +101,9 @@ hook_entity = symbol
 *)
 <treatment> = treat_sym / oprotein / &'x' oprotein handle ip
 treat_sym = symbol
-<streatment> = treatment (spaces conjunction spaces treatment)*
+treatments = treatment (spaces conjunction spaces treatment)*
 
 conjunction = 'and/or' | 'and' | 'or' | '+'
-
-treatments = <'('> spaces? streatment spaces? <')'> /
-             streatment
 
 ktreatment = treatment ktest (spaces conjunction spaces treatment ktest)* |
              treatment (spaces conjunction spaces treatment)* ktest
@@ -160,9 +157,8 @@ extra_name = 'enhanced' |
              'reversed' |
              'unaffected'
 
-<extra_body> = (extra_treat spaces <'['> sub_mode <']'>) /
-               (extra_treat (spaces stim_times)? spaces <'['> addition_mode <']'>)
-extra_treat = streatment
+<extra_body> = (treatments spaces <'['> sub_mode <']'>) /
+               (treatments (spaces stim_times)? spaces <'['> addition_mode <']'>)
 
 addition_mode = 'addition' /
                 'cotreatment' /
