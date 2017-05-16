@@ -29,9 +29,13 @@ schange = 'undetectable' | 'detectable'
     - A protein with any other origin, plus a handle and IP
     - A chemical with a handle
     - A gene
+
+The reason b/r/p/s oproteins are handled separately is to disambiguate
+chemicals from oproteins at the grammar level, so we don't have to do
+complex transformations when type checking later on.
 *)
 subject = <'NS'> /
-          &#'[rps]' oprotein /
+          &#'[brps]' oprotein /
           chemical handle /
           oprotein handle ip /
           gene
@@ -44,7 +48,10 @@ ip = 'IP'?
 handle = <'['> symbol <']'>
 
 (*
-  TODO - Document proteins
+  An oprotein may have:
+  - An origin (a single lower case letter prefix)
+  - Any number of mutations in parentheses, plus a mutation string
+  - Any number of modifications in curly braces
 *)
 oprotein = origin protein mutations modifications
 
@@ -68,7 +75,7 @@ sites = <'('> site (<'/'> site)* <')'>
 <site> = #'([ACTYSKPNLMVIFDERHQWG]|p[TYS])\d+' | symbol
 
 (*
-  TODO - Document assays
+  Assays
 *)
 assay = activity_assay / locatedin / infraction / boundto / phos / generic_assay / binding
 detect = <'['> symbol <']'>
@@ -96,7 +103,7 @@ hook = (hook_entity / oprotein) handle ip
 hook_entity = symbol
 
 (*
-  TODO - Document treatments
+  Treatments
   treat_sym can be Antibody, Stress, or Chemical
 *)
 <treatment> = treat_sym / oprotein / &'x' oprotein handle ip
@@ -111,7 +118,7 @@ ktreatment = treatment ktest (spaces conjunction spaces treatment ktest)* |
 ktest = spaces <'['> symbol <']'>
 
 (*
-  TODO - Document environments
+  Environments and IPfrom contain the same data
 *)
 environment = <'cells:'> spaces? env_description
 ipfrom = <#'IP[12s]?from'> <':'> spaces? env_description;
@@ -122,14 +129,12 @@ cells = symbol
 medium = symbol
 env_none = 'none'
 
-strings = (spaces string)*
-
 cell_mutations = cell_mutation*
 cell_mutation = <'<'> (protein <'~'> mutation_type | oprotein) <'>'>
 mutation_type = symbol
 
 (*
-  TODO - Document sources
+  Source
 *)
 source = <'source:'> spaces? pmid <#'\([DR]\)'>? figures
 pmid = nat
@@ -138,7 +143,7 @@ figures = (<'-'> ('Fig' | 'Table' | figs))*
 <figure> = #'S?\d*[A-Za-z]?(\[[lrtbm]+\])?'
 
 (*
-  TODO - Document times
+  Times
 *)
 times = <'times:'> spaces? timepoints spaces unit
 timepoints = timepoint (spaces timepoint)*
@@ -146,7 +151,7 @@ timepoint = num '+'*
 unit = symbol
 
 (*
-  TODO - Document extras
+  Extras
 *)
 extra = extra_name <' by:'> spaces extra_body |
         req_name <':'> spaces reqs_body
@@ -181,6 +186,11 @@ reqs_type = 'both'
 omission = <'['> #'omissions?' <']'>
 
 (*
+  Meta/comment information
+*)
+comment = <'comment:'> spaces? rest_of_line
+meta = <'meta:'> spaces? rest_of_line
+(*
   Oligos have the following format, but are currently treated as comments
 
   oligo = <'oligo:'> spaces oligo_body
@@ -191,12 +201,11 @@ omission = <'['> #'omissions?' <']'>
 oligo = <'oligo:'> spaces? rest_of_line
 
 (*
-  TODO - Document meta/comments
+  Misc/helper nodes
 *)
-comment = <'comment:'> spaces? rest_of_line
-meta = <'meta:'> spaces? rest_of_line
 
 <string> = <'"'> #'[^"]*' <'"'>
+strings = (spaces string)*
 <symbol> = #'[\w\.\?!\\\-]+'
 <rest_of_line> = #'[^\n]*'
 <spaces> = <#' +'>
