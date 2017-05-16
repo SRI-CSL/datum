@@ -40,7 +40,6 @@ chemical = simple_symbol
 gene = simple_symbol
 <simple_symbol> = !#'[xbrpks]' symbol
 
-<xsprotein> = &'x' oprotein handle ip
 ip = 'IP'?
 handle = <'['> symbol <']'>
 
@@ -100,7 +99,7 @@ hook_entity = symbol
   TODO - Document treatments
   treat_sym can be Antibody, Stress, or Chemical
 *)
-<treatment> = treat_sym / oprotein / xsprotein
+<treatment> = treat_sym / oprotein / &'x' oprotein handle ip
 treat_sym = symbol
 <streatment> = treatment (spaces conjunction spaces treatment)*
 

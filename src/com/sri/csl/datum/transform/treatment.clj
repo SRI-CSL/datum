@@ -11,8 +11,7 @@
     (ops/check-op "Protein" s) {:protein s}
 
     (ops/check-op "Protein" (subs s 1))
-    {:type :oprotein
-     :protein (subs s 1)
+    {:protein (subs s 1)
      :origin (protein/origins (subs s 0 1))}
 
     :else {:unknown s}))

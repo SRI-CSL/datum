@@ -44,8 +44,7 @@
 (def transformers
   {:origin origin
    :protein (c/component :protein)
-   :oprotein (c/simple-merge {:type :oprotein})
-   :xsprotein (c/simple-merge {:type :xsprotein})
+   :oprotein (c/simple-merge)
    :modification (c/simple-merge)
    :mod_symbol (c/component :sym)
    :modifications (c/multi :modifications)
