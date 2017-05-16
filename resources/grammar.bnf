@@ -10,7 +10,7 @@ cfirstline = subject spaces assay spaces <'is'> spaces change spaces ctreatment
 
 changetype = symbol
 change = 'increased' | 'decreased' | ('detectable-but' spaces)? 'unchanged'
-stimes = <'('> (stpt | excuse) <')'>
+<stimes> = <'('> (stpt | <excuse>) <')'>
 stpt = num spaces symbol
 excuse = 'tnr' | 'times'
 

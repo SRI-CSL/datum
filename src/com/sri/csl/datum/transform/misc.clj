@@ -16,8 +16,8 @@
   ([_] {:ip true}))
 
 (defn stpt [t unit]
-  {:time t
-   :unit unit})
+  {:stpt {:time t
+          :unit unit}})
 
 (defn change [& vals]
   {:change (string/join " " vals)})
