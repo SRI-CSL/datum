@@ -3,9 +3,7 @@
             [clojure.java.io :as io]
             [clojure.string :as str]
             [clojure.spec :as s]
-            [clojure.pprint :refer [pprint]]
             [com.sri.csl.datum.ops :as ops]
-            [com.sri.csl.datum.examples :as examples]
             [com.sri.csl.datum.transform.datum :as datum]))
 
 (insta/defparser parser (slurp (clojure.java.io/resource "grammar.bnf")))
@@ -34,14 +32,6 @@
               (swap! counter inc))
             @counter)
           lines))))
-
-(defn make-test-datum [text]
-  (let [ast (parser text)]
-    (pprint ast)
-    (-> ast
-        (datum/datum text 1 1)
-        (dissoc :meta)
-        pprint)))
 
 (defn parse-datum [text filename line]
   (let [ast (parser text)
