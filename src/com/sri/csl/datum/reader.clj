@@ -1,7 +1,6 @@
 (ns com.sri.csl.datum.reader
   (:require [clojure.string :as str]
-            [clojure.java.io :as io]
-            [clojure.string :as string]))
+            [clojure.java.io :as io]))
 
 (defn first-line? [line]
   (.startsWith line "  ***"))
@@ -34,9 +33,14 @@
   [filename]
   (comp (map-indexed (number-line filename))
         (filter :text)
+        ;; Only first-lines are tagged with the :line field, so
+        ;; partitioning on that field splits the stream into a
+        ;; sequence of firstlines followed by the rest of the lines
+        ;; for that datum, which we then group up and concatenate
         (partition-by :line)
         (partition-all 2)
         (map (partial apply concat))
+
         (map build-datum)))
 
 (defn extract-file
@@ -56,7 +60,7 @@
 (defn text-file? [file]
   (and
    (.isFile file)
-   (string/ends-with? (.getName file)
+   (str/ends-with? (.getName file)
                       ".txt")))
 
 (defn extract-directory
