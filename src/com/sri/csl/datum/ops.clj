@@ -1,5 +1,6 @@
 (ns com.sri.csl.datum.ops
-  (:require [clojure.java.io :as io]
+  (:require [clojure.set :as set]
+            [clojure.java.io :as io]
             [clojure.data.json :as json]
             [clojure.algo.generic.functor :refer [fmap]]))
 
@@ -12,13 +13,12 @@
 (def datumsorts
   (->> "datumsorts.json"
        io/resource
-       io/file
        slurp
        json/read-str
        (fmap parse-sort)))
 
 (def allsorts
-  (reduce clojure.set/union (map (comp :elements second) datumsorts)))
+  (reduce set/union (map (comp :elements second) datumsorts)))
 
 (defn check-op [sort op]
   (if-let [{:keys [elements]} (datumsorts sort)]
