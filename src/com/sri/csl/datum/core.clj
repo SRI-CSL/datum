@@ -1,6 +1,7 @@
 (ns com.sri.csl.datum.core
   (:gen-class)
   (:require [instaparse.core :as insta]
+            [instaparse.failure :as fail]
             [clojure.java.io :as io]
             [clojure.string :as str]
             [clojure.spec :as s]
@@ -10,11 +11,9 @@
 
 (insta/defparser parser (slurp (clojure.java.io/resource "grammar.bnf")))
 
-(defn parse-datum [{:keys [text file line]}]
-  (let [ast (parser text)
-        result {:meta {:text text
-                       :filename file
-                       :line line}}]
+(defn parse-datum [datum]
+  (let [ast (parser (:text datum))
+        result {:meta datum}]
     (if (insta/failure? ast)
       (assoc result :parse-error ast)
       (try
@@ -28,11 +27,15 @@
        (pmap parse-datum)))
 
 (defn display-parse-error [err]
-  (let [{{:keys [text filename line]} :meta parse-error :parse-error} err]
-    (println "File: " filename)
-    (println "Line: " line)
-    (println)
-    (println parse-error)
+  (let [{:keys [file line]} (:meta err)
+        {parse-line :line
+         parse-column :column
+         parse-text :text} (:parse-error err)
+        true-line (+ line (dec parse-line))]
+    (println "File:" file)
+    (println (str "Line " true-line ", column " parse-column ":"))
+    (println parse-text)
+    (println (fail/marker parse-column))
     (println)))
 
 (defn -main [f]
@@ -40,6 +43,9 @@
         t-errors (filter :transform-error results)
         p-errors (filter :parse-error results)
         datums (remove (some-fn :transform-error :parse-error) results)]
+    (println "Successful datums: " (count datums))
     (println "Transform errors: " (count t-errors))
     (println "Parse errors: " (count p-errors))
-    (println "Successful datums: " (count datums))))
+    (println)
+    (doall (map display-parse-error p-errors))
+    (System/exit 0)))

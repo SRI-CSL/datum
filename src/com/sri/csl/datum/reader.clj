@@ -14,17 +14,20 @@
       (first-line? line)
       {:line (inc i)
        :file filename
-       :text line}
+       :text line
+       :first true}
 
       (datum-line? line)
-      {:text line}
+      {:line (inc i)
+       :text line
+       :file filename}
 
       true {})))
 
 (defn build-datum
   "Builds a merged datum from a collection of tagged lines"
   [lines]
-  (assoc (first lines)
+  (assoc (dissoc (first lines) :first)
          :text (str/join "\n" (map :text lines))))
 
 (defn xf
@@ -37,7 +40,8 @@
         ;; partitioning on that field splits the stream into a
         ;; sequence of firstlines followed by the rest of the lines
         ;; for that datum, which we then group up and concatenate
-        (partition-by :line)
+        (drop-while (complement :first))
+        (partition-by :first)
         (partition-all 2)
         (map (partial apply concat))
 
