@@ -28,10 +28,12 @@
        (pmap parse-datum)))
 
 (defn display-parse-error [err]
-  (-> err :meta :text println)
-  (println)
-  (-> err :parse-error println)
-  (println))
+  (let [{{:keys [text filename line]} :meta parse-error :parse-error} err]
+    (println "File: " filename)
+    (println "Line: " line)
+    (println)
+    (println parse-error)
+    (println)))
 
 (defn -main [f]
   (let [results (load-datums f)
