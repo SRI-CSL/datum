@@ -152,8 +152,10 @@ unit = symbol
 (*
   Extras
 *)
-extra = extra_name <' by:'> spaces extra_body |
-        req_name <':'> spaces reqs_body
+extra = extra_adj? extra_name <' by:'> spaces extra_body |
+        extra_adj? req_name <':'> spaces reqs_body
+
+extra_adj = 'partially' spaces
 
 extra_name = 'enhanced' |
              'inhibited' |

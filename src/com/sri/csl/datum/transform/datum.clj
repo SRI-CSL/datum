@@ -8,7 +8,6 @@
              [environment :as environment]
              [extra :as extra]
              [common :as c]]
-            [clojure.pprint :refer [pprint]]
             [instaparse.core :as insta]))
 
 (defn singleton? [line]
