@@ -5,9 +5,9 @@
             [com.sri.csl.datum.ops :as ops]))
 
 (defn quit-if-real [return-code]
-  (if *command-line-args*
-    (System/exit return-code)
-    (throw (Exception. "Invalid args."))))
+  (if (str/includes? *file* "cider-repl")
+    (throw (Exception. "Invalid args."))
+    (System/exit return-code)))
 
 (def cli-options
   [["-e" "--errors" "Print errors"
