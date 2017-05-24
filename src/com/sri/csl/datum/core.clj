@@ -15,7 +15,6 @@
        (pmap parse/parse-datum)
        (pmap sanity/check)))
 
-
 (defn -main [& args]
   (let [{arguments :arguments
          {:keys [ops-file print-errors json duplicates merge-related]} :options}

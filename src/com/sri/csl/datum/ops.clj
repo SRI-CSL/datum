@@ -10,18 +10,31 @@
           (fn [[k v]] [(keyword k) (set v)])
           sort)))
 
-(def datumsorts
-  (->> "datumsorts.json"
-       io/resource
+(defn load-ops [f]
+  (->> f
        slurp
        json/read-str
        (fmap parse-sort)))
 
-(def allsorts
-  (reduce set/union (map (comp :elements second) datumsorts)))
+(defn valid-sorts [sorts]
+  (and (map? sorts)
+       (-> sorts
+           first
+           second
+           :elements)))
+
+(def datumsorts
+  (atom (load-ops (io/resource "datumsorts.json"))
+        :validator valid-sorts))
+
+(defn load-ops! [f]
+  (reset! datumsorts (load-ops f)))
+
+#_(def allsorts
+    (reduce set/union (map (comp :elements second) @datumsorts)))
 
 (defn check-op [sort op]
-  (if-let [{:keys [elements]} (datumsorts sort)]
+  (if-let [{:keys [elements]} (@datumsorts sort)]
     (elements op)))
 
 (defn sorts [op]
@@ -29,4 +42,4 @@
        (filter
         (fn [[sort {elements :elements}]]
           (elements op))
-        datumsorts)))
+        @datumsorts)))
