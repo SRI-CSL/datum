@@ -19,7 +19,9 @@
     :parse-fn io/file]
 
    ["-j" "--json" "Print parsed datums as JSON"] 
-   ["-D" "--duplicates" "Print a list of duplicate datums"]])
+   ["-D" "--duplicates" "Print a list of duplicate datums"]
+   ["-m" "--merge" "Merge datums that only differ in extras."
+    :id :merge-related]])
 
 (defn usage [summary]
   (->> ["Usage: java -jar datum.jar [options] [files/directories]"

@@ -4,6 +4,11 @@
    [clojure.string :as str]
    [com.sri.csl.datum.sanity.core :as sanity]))
 
+(def error?
+  (some-fn :transform-error
+           :parse-error
+           :sanity))
+
 (defn format-message [& lines]
   (->> lines
        (filter identity)
@@ -42,17 +47,15 @@
      (str/join "\n\n" (map (formatters title) errors))
      "")))
 
-(defn format-errors [results]
-  (let [total (count results)
-        t-errors (filter :transform-error results)
-        p-errors (filter :parse-error results)
-        s-errors (filter :sanity results)
-        successes (- total
-                     (count t-errors)
-                     (count p-errors)
-                     (count s-errors))]
+(defn format-errors [errors successes merged]
+  (let [t-errors (filter :transform-error errors)
+        p-errors (filter :parse-error errors)
+        s-errors (filter :sanity errors)]
     (format-message
      (format-error-section "Parse" p-errors)
      (format-error-section "Transform" t-errors)
      (format-error-section "Sanity" s-errors)
-     ["Successful datums: " successes])))
+     (if (seq merged)
+       ["Successful datums: " (count merged)
+        " (" (- (count successes) (count merged)) " merged)"]
+       ["Successful datums: " (count successes)]))))

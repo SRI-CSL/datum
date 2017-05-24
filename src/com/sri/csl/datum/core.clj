@@ -2,6 +2,7 @@
   (:gen-class)
   (:require [com.sri.csl.datum.sanity.core :as sanity]
             [com.sri.csl.datum
+             [duplicate :as dup]
              [parse :as parse]
              [errors :as errors]
              [reader :as reader]
@@ -17,13 +18,26 @@
 
 (defn -main [& args]
   (let [{arguments :arguments
-         {:keys [ops-file print-errors json duplicates]} :options}
+         {:keys [ops-file print-errors json duplicates merge-related]} :options}
         (cli/parse args)
 
-        results (mapcat load-datums arguments)]
+        results (mapcat load-datums arguments)
+        errors (filter errors/error? results)
+        successes (remove errors/error? results)
+        merged (if merge-related
+                 (dup/merge-related successes)
+                 successes)]
+
     (when print-errors
-      (println (errors/format-errors results)))
+      (println (errors/format-errors errors successes merged)))
+
+    (when duplicates
+      (-> successes
+          dup/duplicates
+          dup/format-duplicates
+          println))
+
     (when json
-      (println (json/write-str results)))
+      (println (json/write-str merged)))
 
     (System/exit 0)))
