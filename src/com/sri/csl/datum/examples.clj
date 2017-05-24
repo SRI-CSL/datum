@@ -1,5 +1,5 @@
 (ns com.sri.csl.datum.examples
-  (:require [com.sri.csl.datum.core :refer [parser]]
+  (:require [com.sri.csl.datum.parse :refer [parser]]
             [clojure.pprint :refer [pprint]]
             [com.sri.csl.datum.transform.datum :refer [datum]]))
 
