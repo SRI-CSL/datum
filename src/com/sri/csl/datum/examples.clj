@@ -11,12 +11,12 @@
         (dissoc :meta)
         pprint)))
 
-(def test-datum "  *** NS Nfkb-reporter[Luc] is increased irt (PMA + Ionomycin) (12 hr)
+(def test-datum "  *** NS Nfkb-reporter[Luc] is increased irt PMA + Ionomycin (12 hr)
     *** cells: DT40<RacGap1~null><xRacGap1> in BMLS
     *** unaffected by: xRacGap1(K182A/R183A/R184A) [substitution]
     *** source: 19158271-Fig-4c")
 
-(def test-datum-2 "  *** NS prot-exp[WB] is increased irt (UV + TrichostatinA) (times)
+(def test-datum-2 "  *** NS prot-exp[WB] is increased irt UV + TrichostatinA (times)
     *** cells: A549 in BMS
     *** times: 0 2 4+ 8+ 24+ hr
     *** comment: new protein is acetylated on K382 [KAcAb]
@@ -24,34 +24,34 @@
 
 ;;;; Subject examples
 ;; fully loaded xsprotein
-(def subject-full "  *** xBraf(53-42/del(53-42)/(53-42)/pY3/D3D/foobaz)\"Foobar\"{blarg(pY39/floob)}{android(A2)}[Ab]IP IVKA(Mek1)(sitenr)[phosAb] is increased irt (anti-Cd3 + anti-IgG) (times)
+(def subject-full "  *** xBraf(53-42/del(53-42)/(53-42)/pY3/D3D/foobaz)\"Foobar\"{blarg(pY39/floob)}{android(A2)}[Ab]IP IVKA(Mek1)(sitenr)[phosAb] is increased irt anti-Cd3 + anti-IgG (times)
     *** cells: JURKAT<Pten~null> in BMS
     *** times: 0 1+ 3+ 30+ 60+ min
     *** source: 15339934-Fig-2c")
 
-(def subject-oprot "  *** rBraf IVKA(Mek1)(sitenr)[phosAb] is increased irt (anti-Cd3 + anti-IgG) (times)
+(def subject-oprot "  *** rBraf IVKA(Mek1)(sitenr)[phosAb] is increased irt anti-Cd3 + anti-IgG (times)
     *** cells: JURKAT<Pten~null> in BMS
     *** times: 0 1+ 3+ 30+ 60+ min
     *** source: 15339934-Fig-2c")
 
-(def subject-ns "  *** NS IVKA(Mek1)(sitenr)[phosAb] is increased irt (anti-Cd3 + anti-IgG) (times)
+(def subject-ns "  *** NS IVKA(Mek1)(sitenr)[phosAb] is increased irt anti-Cd3 + anti-IgG (times)
     *** cells: JURKAT<Pten~null> in BMS
     *** times: 0 1+ 3+ 30+ 60+ min
     *** source: 15339934-Fig-2c")
 
-(def subject-chem "  *** Hydrogen[Ab] IVKA(Mek1)(sitenr)[phosAb] is increased irt (anti-Cd3 + anti-IgG) (times)
+(def subject-chem "  *** Hydrogen[Ab] IVKA(Mek1)(sitenr)[phosAb] is increased irt anti-Cd3 + anti-IgG (times)
     *** cells: JURKAT<Pten~null> in BMS
     *** times: 0 1+ 3+ 30+ 60+ min
     *** source: 15339934-Fig-2c")
 
-(def subject-gene "  *** Sonic-hedgehog IVKA(Mek1)(sitenr)[phosAb] is increased irt (anti-Cd3 + anti-IgG) (times)
+(def subject-gene "  *** Sonic-hedgehog IVKA(Mek1)(sitenr)[phosAb] is increased irt anti-Cd3 + anti-IgG (times)
     *** cells: JURKAT<Pten~null> in BMS
     *** times: 0 1+ 3+ 30+ 60+ min
     *** source: 15339934-Fig-2c")
 
 ;;;; Assay examples
 ;; Modification Assay
-(def assay-mod "  *** NS prot-exp[WB] is increased irt (UV + TrichostatinA) (times)
+(def assay-mod "  *** NS prot-exp[WB] is increased irt UV + TrichostatinA (times)
     *** cells: A549 in BMS
     *** times: 0 2 4++ 8+ 24+ hr
     *** source: 9744860-Fig-7")
@@ -62,7 +62,7 @@
     *** source: 23142775-Fig-5a")
 
 ;; IVKA Assay
-(def assay-ivka "  *** xBraf[Ab]IP IVKA(Mek1)(sitenr)[phosAb] is increased irt (anti-Cd3 + anti-IgG) (times)
+(def assay-ivka "  *** xBraf[Ab]IP IVKA(Mek1)(sitenr)[phosAb] is increased irt anti-Cd3 + anti-IgG (times)
     *** cells: JURKAT<Pten~null> in BMS
     *** times: 0 1+ 3+ 30+ 60+ min
     *** source: 15339934-Fig-2c")
@@ -85,7 +85,7 @@
 ;;;; Treatment examples
 ;; +
 
-(def treatment-plus "  *** Jnks[phosAb] phos(TPY)[phosAb] is increased irt (anti-Cd3 + anti-Cd28) (10 min)
+(def treatment-plus "  *** Jnks[phosAb] phos(TPY)[phosAb] is increased irt anti-Cd3 + anti-Cd28 (10 min)
     *** cells: JURKAT<Pten~null> in BMLS
     *** source: 15258589-Fig-2e")
 
@@ -95,17 +95,17 @@
 
 ;;;; Environment Examples
 ;;
-(def env-none "  *** Braf[Ab]IP IVKA(Mek1)(sitenr)[phosAb] is increased irt (anti-Cd3 + anti-IgG) (times)
+(def env-none "  *** Braf[Ab]IP IVKA(Mek1)(sitenr)[phosAb] is increased irt anti-Cd3 + anti-IgG (times)
     *** cells: none
     *** times: 0 1+ 3+ 30+ 60+ min
     *** source: 15339934-Fig-2c")
 
-(def env-null-mut "  *** Braf[Ab]IP IVKA(Mek1)(sitenr)[phosAb] is increased irt (anti-Cd3 + anti-IgG) (times)
+(def env-null-mut "  *** Braf[Ab]IP IVKA(Mek1)(sitenr)[phosAb] is increased irt anti-Cd3 + anti-IgG (times)
     *** cells: JURKAT<Pten~null> in BMS
     *** times: 0 1+ 3+ 30+ 60+ min
     *** source: 15339934-Fig-2c")
 
-(def env-o-mut "  *** Braf[Ab]IP IVKA(Mek1)(sitenr)[phosAb] is increased irt (anti-Cd3 + anti-IgG) (times)
+(def env-o-mut "  *** Braf[Ab]IP IVKA(Mek1)(sitenr)[phosAb] is increased irt anti-Cd3 + anti-IgG (times)
     *** cells: JURKAT<xRsks> in BMS
     *** times: 0 1+ 3+ 30+ 60+ min
     *** source: 15339934-Fig-2c")
