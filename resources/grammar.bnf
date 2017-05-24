@@ -11,7 +11,8 @@ cfirstline = subject spaces assay spaces <'is'> spaces change spaces ctreatment
 changetype = symbol
 change = 'increased' | 'decreased' | ('detectable-but' spaces)? 'unchanged'
 <stimes> = <'('> (stpt | <excuse>) <')'>
-stpt = num spaces symbol
+stpt = time spaces unit
+time = num
 excuse = 'tnr' | 'times'
 
 sfirstline = subject spaces assay spaces <'is'> spaces schange

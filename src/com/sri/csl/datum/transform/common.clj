@@ -7,6 +7,11 @@
     ([value] {name value})
     ([] {name nil})))
 
+(defn flag [name]
+  (fn
+    ([] {name false})
+    ([_] {name true})))
+
 (defn multi [name]
   (fn [& values]
     {name (into [] values)}))

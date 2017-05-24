@@ -11,14 +11,6 @@
 (defn timepoint [tpt & mag]
   [tpt (count mag)])
 
-(defn ip
-  ([] {:ip false})
-  ([_] {:ip true}))
-
-(defn stpt [t unit]
-  {:stpt {:time t
-          :unit unit}})
-
 (defn change [& vals]
   {:change (string/join " " vals)})
 
@@ -34,9 +26,10 @@
 
    :timepoint timepoint
    :timepoints (c/multi :times)
+   :time (c/component :time)
    :unit (c/component :unit)
    :times (c/named-merge :times)
-   :stpt stpt
+   :stpt (c/named-merge :stpt)
    :excuse (c/component :excuse)
    
    ;; Oligo currently treated as comment
@@ -49,5 +42,5 @@
 
    :strings (c/multi :strings)
 
-   :ip ip
+   :ip (c/flag :ip)
    :handle (c/component :handle)})
