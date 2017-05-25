@@ -1,29 +1,26 @@
 (ns com.sri.csl.datum.transform.protein
   (:require [com.sri.csl.datum.transform.common :as c]))
 
-(defn del-mut [dom]
-  {:mutation "del"
-   :text (str "del(" (:text dom) ")")})
+(defn del-mut [rng]
+  (assoc rng :mutation "del"))
 
-(defn domain [n1 n2]
-  {:text (str n1 "-" n2)
-   :mutation "domain"})
-
-(defn s-mut [mut]
-  {:mutation "s_mut"
-   :text mut})
+(defn range-mut [n1 n2]
+  {:start n1
+   :end n2
+   :mutation "range"})
 
 (defn point [l1 n l2]
-  {:mutation "point"
-   :text (str l1 n l2)})
+  {:position n
+   :amino-acids [l1 l2]
+   :mutation "point"})
 
 (defn symbol-mut [sym]
   {:mutation "symbol"
-   :text sym})
+   :symbol sym})
 
 (defn mut-string [s]
   {:mutation "string"
-   :text s})
+   :string s})
 
 (defn nullable-vec
   ([] [])
@@ -51,9 +48,9 @@
    :mutations (c/multi :mutations)
    :sites (c/multi :sites)
 
-   :domain domain
+   :range range-mut
    :del_mut del-mut
    :point point
-   :s_mut s-mut
+   :s_mut (c/named-merge :s_mut {:mutation "s_mut"})
    :symbol_mut symbol-mut
    :mutation_string mut-string})

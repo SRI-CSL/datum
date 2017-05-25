@@ -61,10 +61,16 @@ protein = symbol
 
 mutations = (<'('> mutation (<'/'> mutation)* <')'> mutation_string?)?
 <mutation> = domain / del_mut / s_mut / point / symbol_mut
-del_mut = <'del('> domain <')'>
-s_mut = #'p[TSY]\d{1,4}'
+(* Range *)
+range = nat <'-'> nat
+(* Deletion *)
+del_mut = <'del('> range <')'>
+(* Synthetic mutation *)
+s_mut = <'p'> s_mut_acid s_mut_position
+s_mut_acid = #'[TSY]'
+s_mut_position = #'\d{1,4}'
+(* Point mutation *)
 point = letter nat letter
-domain = nat <'-'> nat
 symbol_mut = symbol
 mutation_string = string
 
