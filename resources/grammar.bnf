@@ -190,7 +190,6 @@ omission = <'['> #'omissions?' <']'>
   Meta/comment information
 *)
 comment = <'comment:'> spaces? rest_of_line
-meta = <'meta:'> spaces? rest_of_line
 (*
   Oligos have the following format, but are currently treated as comments
 
