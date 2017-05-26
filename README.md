@@ -1,36 +1,25 @@
 # datum
 
-FIXME: description
-
-## Installation
-
-Download from http://example.com/FIXME.
+A parser for the [Human Readable Datum Format](http://pl.csl.sri.com/datumkb.html) used by [Pathway Logic](http://pl.csl.sri.com/index.html). Takes in a file or directory of datums, does some basic sanity checking, and emits JSON.
 
 ## Usage
 
-FIXME: explanation
-
-    $ java -jar datum-0.1.0-standalone.jar [args]
+    $ java -jar datum-0.1.0-standalone.jar [args] [files/directories]
 
 ## Options
 
-FIXME: listing of options this app accepts.
+    Options:
+      -e, --errors         Print errors
+      -o, --ops-file FILE  Provide an external ops json file
+      -j, --json           Print parsed datums as JSON
+      -J, --pretty-json    Pretty-print parsed datums as JSON
+      -D, --duplicates     Print a list of duplicate datums
+      -m, --merge          Merge datums that only differ in extras.
 
-## Examples
+## Ops
 
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
+For sanity and type checking, you will need an `ops file`, which is a JSON file containing a Maude type hierarchy of relevant sorts and ops. The parser is bundled with some default ops. Instructions for generating your own TBD.
 
 ## License
 
-Copyright © 2015 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Released under the MIT license. See LICENSE for the full license.
