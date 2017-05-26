@@ -1,6 +1,18 @@
 (ns com.sri.csl.datum.transform.protein
   (:require [com.sri.csl.datum.transform.common :as c]))
 
+(def origins
+  {"" "endogenous"
+   "b" "baculovirus"
+   "x" "expressed"
+   "r" "recombinant"
+   "p" "purified"
+   "k" "knockin"
+   "s" "synthetic"})
+
+(defn origin [orig]
+  {:origin (origins orig)})
+
 (defn del-mut [rng]
   (assoc rng :mutation "del"))
 
@@ -21,22 +33,6 @@
 (defn mut-string [s]
   {:mutation "string"
    :string s})
-
-(defn nullable-vec
-  ([] [])
-  ([& r] (vec r)))
-
-(def origins
-  {"" "endogenous"
-   "b" "baculovirus"
-   "x" "expressed"
-   "r" "recombinant"
-   "p" "purified"
-   "k" "knockin"
-   "s" "synthetic"})
-
-(defn origin [orig]
-  {:origin (origins orig)})
 
 (def transformers
   {:origin origin
