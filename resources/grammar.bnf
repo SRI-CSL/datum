@@ -21,7 +21,7 @@ schange = 'undetectable' | 'detectable'
 <lines> = datumline (spaces? newline datumline)*
 <datumline> = <'  '> line_prefix
               (source | environment | times | extra |
-               meta | comment | oligo | ipfrom) spaces?
+               comment | oligo | ipfrom) spaces?
 
 (*
   A subject can be one of the following:
@@ -60,7 +60,7 @@ origin = #'[xbrpks]?'
 protein = symbol
 
 mutations = (<'('> mutation (<'/'> mutation)* <')'> mutation_string?)?
-<mutation> = domain / del_mut / s_mut / point / symbol_mut
+<mutation> = range / del_mut / s_mut / point / symbol_mut
 (* Range *)
 range = nat <'-'> nat
 (* Deletion *)
