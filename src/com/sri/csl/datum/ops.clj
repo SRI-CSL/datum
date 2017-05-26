@@ -1,7 +1,7 @@
 (ns com.sri.csl.datum.ops
   (:require [clojure.set :as set]
             [clojure.java.io :as io]
-            [clojure.data.json :as json]
+            [cheshire.core :as cheshire]
             [clojure.algo.generic.functor :refer [fmap]]))
 
 (defn parse-sort [sort]
@@ -13,7 +13,7 @@
 (defn load-ops [f]
   (->> f
        slurp
-       json/read-str
+       cheshire/parse-string
        (fmap parse-sort)))
 
 (defn valid-sorts [sorts]

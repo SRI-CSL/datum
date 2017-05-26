@@ -20,6 +20,8 @@
     :validate [#(.isFile %) "Ops file not found."]]
 
    ["-j" "--json" "Print parsed datums as JSON"] 
+   ["-J" "--pretty-json" "Pretty-print parsed datums as JSON"
+    :default false]
    ["-D" "--duplicates" "Print a list of duplicate datums"]
    ["-m" "--merge" "Merge datums that only differ in extras."
     :id :merge-related]])

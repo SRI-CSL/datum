@@ -3942,6 +3942,6 @@
 "noK":{
  	"lesser":[],
  	"greater":["KTreatments", "KTreatmentsA", "KTreatmentsAndOr", "KTreatmentsOr"],
- 	"elements":["none"]},
- 
-} 
+ 	"elements":["none"]}
+
+}

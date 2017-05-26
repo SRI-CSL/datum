@@ -7,7 +7,7 @@
              [errors :as errors]
              [reader :as reader]
              [cli :as cli]]
-            [clojure.data.json :as json]))
+            [cheshire.core :as cheshire]))
 
 (defn load-datums [file]
   (->> file
@@ -17,7 +17,9 @@
 
 (defn -main [& args]
   (let [{arguments :arguments
-         {:keys [ops-file print-errors json duplicates merge-related]} :options}
+         {:keys [print-errors
+                 json pretty-json
+                 duplicates merge-related]} :options}
         (cli/parse args)
 
         results (mapcat load-datums arguments)
@@ -36,7 +38,7 @@
           dup/format-duplicates
           println))
 
-    (when json
-      (println (json/write-str merged)))
+    (when (or json pretty-json)
+      (println (cheshire/generate-string merged {:pretty pretty-json})))
 
     (System/exit 0)))
