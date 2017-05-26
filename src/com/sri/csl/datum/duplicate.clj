@@ -21,9 +21,11 @@
   [datums]
   (if (> (count datums) 1)
     (let [metas (map :meta datums)
-          extras (mapcat :extras datums)]
+          comments (distinct (mapcat :comments datums))
+          extras (distinct (mapcat :extras datums))]
       (assoc (first datums)
              :meta {:merged metas}
+             :comments comments
              :extras extras))
     (first datums)))
 
@@ -32,7 +34,7 @@
   only differ by :meta and :extras."
   [bucket]
   (->> bucket
-       (group-by #(dissoc % :meta :extras))
+       (group-by #(dissoc % :meta :comments :extras))
        vals
        (map merge-datums)))
 
