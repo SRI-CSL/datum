@@ -1,7 +1,10 @@
-(ns com.sri.csl.datum.sanity.core)
+(ns com.sri.csl.datum.sanity.core
+  (:require [com.sri.csl.datum.sanity
+             [crawl :as crawl]]))
 
 (defn check [datum]
-  datum)
+  (let [sanity-errors (crawl/crawl-datum datum)]
+    (if (empty? sanity-errors)
+      datum
+      (assoc datum :sanity-errors sanity-errors))))
 
-(defn format-error [err]
-  "")

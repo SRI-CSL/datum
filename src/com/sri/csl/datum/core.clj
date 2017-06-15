@@ -12,8 +12,7 @@
 (defn load-datums [file]
   (->> file
        reader/extract
-       (pmap parse/parse-datum)
-       (pmap sanity/check)))
+       (pmap parse/parse-datum)))
 
 (defn -main [& args]
   (let [{arguments :arguments

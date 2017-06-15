@@ -7,7 +7,7 @@
 (def error?
   (some-fn :transform-error
            :parse-error
-           :sanity))
+           :sanity-errors))
 
 (defn format-message [& lines]
   (->> lines
@@ -35,10 +35,22 @@
      ""
      (:transform-error err))))
 
+(defn format-sanity-error [err]
+  (let [{:keys [text file line]} (:meta err)
+        sanity (:sanity-errors err)]
+    (format-message
+     ["File: " file]
+     ["Line: " line]
+     ""
+     text
+     ""
+     "Failed sanity checks:"
+     (str/join \newline (map :error sanity)))))
+
 (def formatters
   {"Parse" format-parse-error
    "Transform" format-transform-error
-   "Sanity" sanity/format-error})
+   "Sanity" format-sanity-error})
 
 (defn format-error-section [title errors]
   (when (seq errors)
@@ -50,7 +62,7 @@
 (defn format-errors [errors successes merged]
   (let [t-errors (filter :transform-error errors)
         p-errors (filter :parse-error errors)
-        s-errors (filter :sanity errors)]
+        s-errors (filter :sanity-errors errors)]
     (format-message
      (format-error-section "Parse" p-errors)
      (format-error-section "Transform" t-errors)

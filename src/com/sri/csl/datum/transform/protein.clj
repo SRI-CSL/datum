@@ -39,7 +39,7 @@
    :protein (c/component :protein)
    :oprotein (c/simple-merge)
    :modification (c/simple-merge)
-   :mod_symbol (c/component :sym)
+   :mod_symbol (c/component :symbol)
    :modifications (c/multi :modifications)
    :mutations (c/multi :mutations)
    :sites (c/multi :sites)
