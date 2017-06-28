@@ -19,8 +19,9 @@
 (defn check-node [datum path checkers node]
   (let [applicable-checks (check/applicable checkers path)]
     (->> applicable-checks
-         (mapcat #(% datum path node))
-         (filter seq))))
+         (map #(% datum path node))
+         (filter identity)
+         (apply concat))))
 
 (defn crawl [datum path checkers node]
   (concat
@@ -36,4 +37,4 @@
      [])))
 
 (defn crawl-datum [datum]
-  (crawl datum [:datum] (check/checkers) datum))
+  (crawl datum '(:datum) (check/checkers) datum))
