@@ -167,13 +167,13 @@ extra_name = 'enhanced' |
              'unaffected'
 
 <extra_body> = (treatments spaces <'['> sub_mode <']'>) /
-               (treatments (spaces stim_times)? spaces <'['> addition_mode <']'>)
+               (treatments (spaces stim_times)? spaces <'['> addition_mode <']'>) /
+               ktreatment
 
 addition_mode = 'addition' /
                 'cotreatment' /
                 'pretreatment' /
-                'posttreatment' /
-                symbol
+                'posttreatment'
 
 stim_times = <'('> (numlist spaces unit | stim_times_excuse) <')'>
 numlist = nat (spaces? <','> spaces? nat)*
