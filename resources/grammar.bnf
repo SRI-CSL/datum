@@ -36,14 +36,10 @@ chemicals from oproteins at the grammar level, so we don't have to do
 complex transformations when type checking later on.
 *)
 subject = <'NS'> /
-          &#'[brps]' oprotein /
-          chemical handle /
-          oprotein handle ip /
-          gene
+          subject_sym handle? /
+          oprotein handle ip
 
-chemical = simple_symbol
-gene = simple_symbol
-<simple_symbol> = !#'[xbrpks]' symbol
+subject_sym = !#'[xbrpks]' symbol
 
 ip = 'IP'?
 handle = <'['> symbol <']'>
