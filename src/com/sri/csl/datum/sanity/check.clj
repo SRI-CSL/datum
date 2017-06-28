@@ -63,13 +63,36 @@
     (simple-sort :handle "Handle")
 
     ;; Needs logic to prevent barfing at outer-level assays
+    [(path-end [:assay :assay])
+     (sort-check "AssayType")]
+
     ;; (simple-sort :assay "AssayType")
     (simple-sort :detect "DetectionMethod")
-    ;; (simple-sort :position "Position")
+
+    [(path-end [:position :assay])
+     (sort-check "Position")]
+
     (simple-sort :fraction "Fraction")
-    (simple-sort :cells "Cells")
+
+    [(path-end [:cells])
+     (check-or (sort-check "Cells")
+               (eq-check "none"))]
+
     (simple-sort :medium "Medium")
     (simple-sort :mutation-type "Mutation")
+
+    [(path-end [:symbol :_ :mutations])
+     (sort-check "Mutation")]
+
+    [(path-end [:symbol :_ :modifications])
+     (sort-check "Modification")]
+
+    [(path-end [:_ :substrates])
+     (sort-check "Substrate")]
+
+    [(path-end [:_ :tests])
+     (sort-check "Ktest")]
+
     (simple-sort :unit "TimeUnit")
     ]))
 
