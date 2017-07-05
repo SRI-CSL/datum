@@ -2,12 +2,14 @@
   (:require [com.sri.csl.datum.sanity
              [crawl :as crawl]
              [sorts :as sorts]
-             [subject :as subject]]))
+             [subject :as subject]
+             [assay :as assay]]))
 
 (defn checkers []
   (concat
    sorts/checkers
-   subject/checkers))
+   subject/checkers
+   assay/checkers))
 
 (defn check [datum]
   (let [sanity-errors (crawl/crawl datum '(:datum) (checkers) datum)]
