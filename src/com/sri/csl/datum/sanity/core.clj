@@ -3,13 +3,15 @@
              [crawl :as crawl]
              [sorts :as sorts]
              [subject :as subject]
-             [assay :as assay]]))
+             [assay :as assay]
+             [misc :as misc]]))
 
 (defn checkers []
   (concat
    sorts/checkers
    subject/checkers
-   assay/checkers))
+   assay/checkers
+   misc/checkers))
 
 (defn check [datum]
   (let [sanity-errors (crawl/crawl datum '(:datum) (checkers) datum)]

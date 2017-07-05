@@ -7,8 +7,11 @@
   (let [applicable-checks (check/applicable checkers path)]
     (->> applicable-checks
          (map #(% datum path node))
+         flatten
          (filter identity)
-         (apply concat))))
+         (map (fn [err]
+                {:path path
+                 :error err})))))
 
 (defn crawl-map [datum path checkers m]
   (mapcat

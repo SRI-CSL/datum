@@ -30,13 +30,16 @@
 (defn eq-check [val]
   (fn [datum path node]
     (when (not= node val)
-      [{:path path
-        :error (str node " is not " val)}])))
+      (str node " is not " val))))
 
 (defn error [msg]
   (fn [datum path node]
-    {:path path
-     :error msg}))
+     msg))
+
+(defn path-required [required-path msg]
+  (fn [datum path node]
+    (when-not (get-in datum required-path)
+      msg)))
 
 (defn check-or [& checkers]
   (fn [datum path node]
@@ -46,7 +49,7 @@
 
 (defn check-and [& checkers]
   (fn [datum path node]
-    (mapcat #(% datum path node) checkers)))
+    (map #(% datum path node) checkers)))
 
 (defn applicable
   [checks path]

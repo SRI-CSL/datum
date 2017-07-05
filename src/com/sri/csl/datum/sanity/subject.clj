@@ -7,8 +7,7 @@
   (when
       (and (not (:protein node))
            (some node [:origin :ip :modifications :mutations]))
-    [{:path path
-      :error "Non-protein subject with protein-related fields."}]))
+    "Non-protein subject with protein-related fields."))
 
 (def checkers
   [[(check/path-end [:subject])

@@ -7,8 +7,7 @@
 (defn sort-check [& sorts]
   (fn [datum path node]
     (when-not (some #(ops/check-op % node) sorts)
-      [{:path path
-        :error (str node " is not a known " (str/join "/" sorts))}])))
+      (str node " is not a known " (str/join "/" sorts)))))
 
 (defn simple-sort [label & sorts]
   [(path-end [label])
@@ -17,8 +16,7 @@
 (defn ivlka-check [datum path node]
   (when (= (get-in datum [:assay :assay]) "IVLKA")
     (when-not (ops/check-op "Lipid" node)
-      [{:path path
-        :error (str "IVLKA substrates must be Lipids.")}])))
+      "IVLKA substrates must be Lipids.")))
 
 (def checkers
   [(simple-sort :protein "Protein" "Peptide" "Composite")
