@@ -1,7 +1,6 @@
 (ns com.sri.csl.datum.sanity.assay
   (:require
-   [com.sri.csl.datum.sanity.check :as check]
-   [clojure.string :as str]))
+   [com.sri.csl.datum.sanity.check :as check]))
 
 (defn sites-requires-single-substrate [datum path node]
   (let [substrates (get-in datum [:assay :substrates])]

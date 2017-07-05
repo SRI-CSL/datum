@@ -16,12 +16,12 @@
      (crawl datum (conj path label) checkers child))
    m))
 
-(defn crawl-vec [datum path checkers v]
+(defn crawl-seq [datum path checkers s]
   (apply concat
          (map-indexed
           (fn [idx child]
             (crawl datum (conj path idx) checkers child))
-          v)))
+          s)))
 
 (defn crawl [datum path checkers node]
   (concat
@@ -30,8 +30,8 @@
      (map? node)
      (crawl-map datum path checkers node)
 
-     (vector? node)
-     (crawl-vec datum path checkers node)
+     (sequential? node)
+     (crawl-seq datum path checkers node)
 
      :else
-     [])))
+     (check-node datum (conj path node) checkers nil))))
