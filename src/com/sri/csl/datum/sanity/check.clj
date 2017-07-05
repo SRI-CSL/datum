@@ -1,6 +1,4 @@
-(ns com.sri.csl.datum.sanity.check
-  (:require [com.sri.csl.datum.ops :as ops]
-            [clojure.string :as str]))
+(ns com.sri.csl.datum.sanity.check)
 
 (defn path-comp
   "DSL for checking elements of a path.
@@ -29,21 +27,16 @@
      (>= (count path) (count postfix))
      (every? true? (map path-comp postfix path)))))
 
-(defn sort-check [& sorts]
-  (fn [datum path node]
-    (when-not (some #(ops/check-op % node) sorts)
-      [{:path path
-        :error (str node " is not a known " (str/join "/" sorts))}])))
-
 (defn eq-check [val]
   (fn [datum path node]
     (when (not= node val)
       [{:path path
         :error (str node " is not " val)}])))
 
-(defn simple-sort [label & sorts]
-  [(path-end [label])
-   (apply sort-check sorts)])
+(defn error [msg]
+  (fn [datum path node]
+    {:path path
+     :error msg}))
 
 (defn check-or [& checkers]
   (fn [datum path node]
@@ -55,47 +48,6 @@
   (fn [datum path node]
     (mapcat #(% datum path node) checkers)))
 
-(defn checkers []
-  (concat
-   [(simple-sort :protein "Protein" "Peptide" "Composite")
-    (simple-sort :chemical "Chemical")
-    (simple-sort :gene "Gene")
-    (simple-sort :handle "Handle")
-
-    ;; Needs logic to prevent barfing at outer-level assays
-    [(path-end [:assay :assay])
-     (sort-check "AssayType")]
-
-    ;; (simple-sort :assay "AssayType")
-    (simple-sort :detect "DetectionMethod")
-
-    [(path-end [:position :assay])
-     (sort-check "Position")]
-
-    (simple-sort :fraction "Fraction")
-
-    [(path-end [:cells])
-     (check-or (sort-check "Cells")
-               (eq-check "none"))]
-
-    (simple-sort :medium "Medium")
-    (simple-sort :mutation-type "Mutation")
-
-    [(path-end [:symbol :_ :mutations])
-     (sort-check "Mutation")]
-
-    [(path-end [:symbol :_ :modifications])
-     (sort-check "Modification")]
-
-    [(path-end [:_ :substrates])
-     (sort-check "Substrate")]
-
-    [(path-end [:_ :tests])
-     (sort-check "Ktest")]
-
-    (simple-sort :unit "TimeUnit")
-    ]))
-
 (defn applicable
   [checks path]
   (->> checks
@@ -104,4 +56,3 @@
           (when (applic path)
             check)))
        (filter identity)))
-
