@@ -35,6 +35,18 @@
      ""
      (:transform-error err))))
 
+(defn format-path-component [comp]
+  (if (keyword? comp)
+    (name comp)
+    (str comp)))
+
+(defn format-path [path]
+  (str/join ":" (reverse (map format-path-component path))))
+
+(defn format-sanity-complaint [complaint]
+  (str (format-path (:path complaint)) " "
+       (:error complaint)))
+
 (defn format-sanity-error [err]
   (let [{:keys [text file line]} (:meta err)
         sanity (:sanity-errors err)]
@@ -45,7 +57,7 @@
      text
      ""
      "Failed sanity checks:"
-     (str/join \newline (map :error sanity)))))
+     (str/join \newline (map format-sanity-complaint sanity)))))
 
 (def formatters
   {"Parse" format-parse-error
