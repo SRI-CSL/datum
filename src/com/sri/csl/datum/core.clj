@@ -14,7 +14,7 @@
        reader/extract
        (pmap parse/parse-datum)))
 
-(defn -main [& args]
+(defn run [& args]
   (let [{arguments :arguments
          {:keys [print-errors
                  json pretty-json
@@ -38,6 +38,8 @@
           println))
 
     (when (or json pretty-json)
-      (println (cheshire/generate-string merged {:pretty pretty-json})))
+      (println (cheshire/generate-string merged {:pretty pretty-json})))))
 
-    (System/exit 0)))
+(defn -main [& args]
+  (apply run args)
+  (System/exit 0))
