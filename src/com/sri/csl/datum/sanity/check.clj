@@ -34,7 +34,7 @@
 
 (defn error [msg]
   (fn [datum path node]
-     msg))
+    (format msg (str node))))
 
 (defn path-required [required-path msg]
   (fn [datum path node]
