@@ -5,20 +5,21 @@
 
 (defn multi-sym [s]
   (cond
-    (ops/check-op "Protein" s) {:protein s}
-    (ops/check-op "Composite" s) {:protein s}
-    (ops/check-op "Peptide" s) {:protein s}
-    (ops/check-op "Chemical" s) {:chemical s}
-    (ops/check-op "Gene" s) {:gene s}
-
     ;; Only in treatments
     (ops/check-op "Antibody" s) {:antibody s}
     (ops/check-op "Stress" s) {:stress s}
+
+    ;; Subjects/treatments/hooks
+    (ops/check-op "Protein" s) {:protein s}
+    (ops/check-op "Composite" s) {:protein s}
+    (ops/check-op "Chemical" s) {:chemical s}
+    (ops/check-op "Gene" s) {:gene s}
 
     (ops/check-op "Protein" (subs s 1))
     {:protein (subs s 1)
      :origin (protein/origins (subs s 0 1))}
 
+    ;; Hooks only
     (= s "oligo") {:oligo "oligo"}
 
     :else {:unknown s}))

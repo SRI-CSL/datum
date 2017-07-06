@@ -23,18 +23,7 @@ schange = 'undetectable' | 'detectable'
               (source | environment | times | extra |
                comment | oligo | ipfrom) spaces?
 
-(*
-  A subject can be one of the following:
-    - No subject at all
-    - An oprotein with origin r/p/s
-    - A protein with any other origin, plus a handle and IP
-    - A chemical with a handle
-    - A gene
-
-The reason b/r/p/s oproteins are handled separately is to disambiguate
-chemicals from oproteins at the grammar level, so we don't have to do
-complex transformations when type checking later on.
-*)
+(* Subjects *)
 subject = <'NS'> /
           subject_sym handle? /
           oprotein handle? ip

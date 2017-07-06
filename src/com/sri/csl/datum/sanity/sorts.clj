@@ -24,6 +24,18 @@
    (simple-sort :gene "Gene")
    (simple-sort :handle "Handle")
 
+   (simple-sort :antibody "Antibody")
+   (simple-sort :stress "Stress")
+
+   [(check/postfix [#{:antibody :stress} :_ :!treatments])
+    (check/error "Antibodies and Stresses are only valid as treatments.")]
+
+   [(check/postfix [:gene :_ :treatments])
+    (check/error "Genes are not valid treatments.")]
+
+   [(check/postfix [:oligo :_ :!hooks])
+    (check/error "oligo only valid as a hook.")]
+
    [(check/postfix [:assay :assay])
     (sort-check "AssayType")]
 

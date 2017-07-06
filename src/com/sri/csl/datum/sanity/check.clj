@@ -15,6 +15,9 @@
     (fn? spec)
     (spec elt)
 
+    (set? spec)
+    (spec elt)
+
     (= \! (first (name spec)))
     (not= (-> spec name (subs 1) keyword) elt)
 
@@ -25,7 +28,7 @@
   (fn [path]
     (and
      (>= (count path) (count post))
-     (every? true? (map path-comp post path)))))
+     (every? identity (map path-comp post path)))))
 
 (defn eq [val]
   (fn [datum path node]
