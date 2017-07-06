@@ -2,10 +2,10 @@
   (:require
    [com.sri.csl.datum.sanity.check :as check]))
 
-(defn sites-requires-single-substrate [datum path node]
-  (let [substrates (get-in datum [:assay :substrates])]
-    (when-not (= 1 (count substrates))
-      "Assay sites only make sense with exactly one substrate.")))
+(defn ivlka-has-no-sites [datum path node]
+  (when (= (get-in datum [:assay :assay])
+           "IVLKA")
+    "IVLKA assays should not have sites."))
 
 (defn oligo-binding-has-no-sites [datum path node]
   (when (= (get-in datum [:assay :assay])
@@ -15,5 +15,5 @@
 (def checkers
   [[(check/path-end [:sites :assay])
     (check/check-and
-     sites-requires-single-substrate
+     ivlka-has-no-sites
      oligo-binding-has-no-sites)]])
