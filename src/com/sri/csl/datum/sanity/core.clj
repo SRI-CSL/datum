@@ -4,6 +4,8 @@
              [sorts :as sorts]
              [subject :as subject]
              [assay :as assay]
+             [environment :as environment]
+             [treatment :as treatment]
              [misc :as misc]]))
 
 (defn checkers []
@@ -11,6 +13,8 @@
    sorts/checkers
    subject/checkers
    assay/checkers
+   environment/checkers
+   treatment/checkers
    misc/checkers))
 
 (defn check [datum]
