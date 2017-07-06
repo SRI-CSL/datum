@@ -10,5 +10,5 @@
     "Non-protein subject with protein-related fields."))
 
 (def checkers
-  [[(check/path-end [:subject])
+  [[(check/postfix [:subject])
     subject-fields]])

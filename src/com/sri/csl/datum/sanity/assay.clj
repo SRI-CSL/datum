@@ -13,7 +13,7 @@
     "Oligo-binding assays should not have sites."))
 
 (def checkers
-  [[(check/path-end [:sites :assay])
+  [[(check/postfix [:sites :assay])
     (check/check-and
      ivlka-has-no-sites
      oligo-binding-has-no-sites)]])

@@ -3,5 +3,5 @@
    [com.sri.csl.datum.sanity.check :as check]))
 
 (def checkers
-  [[(check/path-end [:datum])
+  [[(check/postfix [:datum])
     (check/path-required [:environment] "Environment must be present.")]])

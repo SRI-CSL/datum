@@ -21,16 +21,21 @@
     :else
     (= spec elt)))
 
-(defn path-end [postfix]
+(defn postfix [post]
   (fn [path]
     (and
-     (>= (count path) (count postfix))
-     (every? true? (map path-comp postfix path)))))
+     (>= (count path) (count post))
+     (every? true? (map path-comp post path)))))
 
-(defn eq-check [val]
+(defn eq [val]
   (fn [datum path node]
     (when (not= node val)
       (str node " is not " val))))
+
+(defn regex [re]
+  (fn [datum path node]
+    (when-not (re-matches re node)
+      (str node " does not match " re))))
 
 (defn error [msg]
   (fn [datum path node]

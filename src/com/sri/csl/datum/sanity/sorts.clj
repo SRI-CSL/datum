@@ -1,6 +1,6 @@
 (ns com.sri.csl.datum.sanity.sorts
   (:require
-   [com.sri.csl.datum.sanity.check :as check :refer [path-end check-or eq-check check-and]]
+   [com.sri.csl.datum.sanity.check :as check]
    [com.sri.csl.datum.ops :as ops]
    [clojure.string :as str]))
 
@@ -10,7 +10,7 @@
       (str node " is not a known " (str/join "/" sorts)))))
 
 (defn simple-sort [label & sorts]
-  [(path-end [label])
+  [(check/postfix [label])
    (apply sort-check sorts)])
 
 (defn ivlka-check [datum path node]
@@ -24,35 +24,38 @@
    (simple-sort :gene "Gene")
    (simple-sort :handle "Handle")
 
-   [(path-end [:assay :assay])
+   [(check/postfix [:assay :assay])
     (sort-check "AssayType")]
 
    (simple-sort :detect "DetectionMethod")
 
-   [(path-end [:position :assay])
+   [(check/postfix [:_ :sites])
+    (check/check-or (check/regex #""))]
+
+   [(check/postfix [:position :assay])
     (sort-check "Position")]
 
    (simple-sort :fraction "Fraction")
 
-   [(path-end [:cells])
-    (check-or (sort-check "Cells")
-              (eq-check "none"))]
+   [(check/postfix [:cells])
+    (check/check-or (sort-check "Cells")
+              (check/eq "none"))]
 
    (simple-sort :medium "Medium")
    (simple-sort :mutation-type "Mutation")
 
-   [(path-end [:symbol :_ :mutations])
+   [(check/postfix [:symbol :_ :mutations])
     (sort-check "Mutation")]
 
-   [(path-end [:symbol :_ :modifications])
+   [(check/postfix [:symbol :_ :modifications])
     (sort-check "Modification")]
 
-   [(path-end [:_ :substrates])
-    (check-and
+   [(check/postfix [:_ :substrates])
+    (check/check-and
      (sort-check "Substrate")
      ivlka-check)]
 
-   [(path-end [:_ :tests])
+   [(check/postfix [:_ :tests])
     (sort-check "Ktest")]
 
    (simple-sort :unit "TimeUnit")])
