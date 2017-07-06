@@ -74,7 +74,7 @@ modifications = modification*
 modification = <'{'> mod_symbol sites? <'}'>
 mod_symbol = symbol
 sites = <'('> site (<'/'> site)* <')'>
-<site> = #'[ACTYSKPNLMVIFDERHQWG]\d+' | symbol
+<site> = #'[ACDEFGHIKLMNPQRSTVWY]\d+' | symbol
 
 (*
   Assays

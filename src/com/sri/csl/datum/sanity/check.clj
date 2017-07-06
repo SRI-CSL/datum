@@ -48,13 +48,13 @@
 
 (defn check-or [& checkers]
   (fn [datum path node]
-    (let [results (mapcat #(% datum path node) checkers)]
-      (when (= (count checkers) (count results))
-        results))))
+    (let [results (map #(% datum path node) checkers)]
+      (when (every? seq results)
+        (flatten results)))))
 
 (defn check-and [& checkers]
   (fn [datum path node]
-    (map #(% datum path node) checkers)))
+    (flatten (map #(% datum path node) checkers))))
 
 (defn applicable
   [checks path]

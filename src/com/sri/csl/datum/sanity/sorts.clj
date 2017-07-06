@@ -30,7 +30,9 @@
    (simple-sort :detect "DetectionMethod")
 
    [(check/postfix [:_ :sites])
-    (check/check-or (check/regex #""))]
+    (check/check-or
+     (check/regex #"[ACDEFGHIKLMNPQRSTVWY]\d+")
+     (sort-check "Site"))]
 
    [(check/postfix [:position :assay])
     (sort-check "Position")]
@@ -38,8 +40,9 @@
    (simple-sort :fraction "Fraction")
 
    [(check/postfix [:cells])
-    (check/check-or (sort-check "Cells")
-              (check/eq "none"))]
+    (check/check-or
+     (sort-check "Cells")
+     (check/eq "none"))]
 
    (simple-sort :medium "Medium")
    (simple-sort :mutation-type "Mutation")
