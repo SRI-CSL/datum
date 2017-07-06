@@ -6,6 +6,8 @@
 (defn subject-sym [s]
   (cond
     (ops/check-op "Protein" s) {:protein s}
+    (ops/check-op "Composite" s) {:protein s}
+    (ops/check-op "Peptide" s) {:protein s}
     (ops/check-op "Chemical" s) {:chemical s}
     (ops/check-op "Gene" s) {:gene s}
     :else {:unknown s}))
