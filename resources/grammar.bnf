@@ -37,9 +37,9 @@ complex transformations when type checking later on.
 *)
 subject = <'NS'> /
           subject_sym handle? /
-          oprotein handle ip
+          oprotein handle? ip
 
-subject_sym = !#'[xbrpks]' symbol
+subject_sym = symbol
 
 ip = 'IP'?
 handle = <'['> symbol <']'>
