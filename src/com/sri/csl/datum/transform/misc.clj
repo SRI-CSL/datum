@@ -11,6 +11,9 @@
 (defn timepoint [tpt & mag]
   [tpt (count mag)])
 
+(defn excuse [ex]
+  {:times {:excuse ex}})
+
 (defn change [& vals]
   {:change (string/join " " vals)})
 
@@ -30,7 +33,7 @@
    :unit (c/component :unit)
    :times (c/named-merge :times)
    :stpt (c/named-merge :stpt)
-   :excuse (c/component :excuse)
+   :excuse excuse
    
    ;; Oligo currently treated as comment
    :oligo oligo
