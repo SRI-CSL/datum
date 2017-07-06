@@ -9,6 +9,16 @@
            (some node [:origin :ip :modifications :mutations]))
     "Non-protein subject with protein-related fields."))
 
+(defn handle-required [datum path node]
+  (and
+   (not (:handle node))
+   (not (:chemical node))
+   (not (:gene node))
+   (not (#{"recombinant" "purified"} (:origin node)))
+   "Handle required for this subject."))
+
 (def checkers
   [[(check/postfix [:subject])
-    subject-fields]])
+    (check/check-and
+     subject-fields
+     handle-required)]])
