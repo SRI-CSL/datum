@@ -15,7 +15,9 @@
     (ops/check-op "Chemical" s) {:chemical s}
     (ops/check-op "Gene" s) {:gene s}
 
-    (ops/check-op "Protein" (subs s 1))
+    (or
+     (ops/check-op "Protein" (subs s 1))
+     (ops/check-op "Composite" (subs s 1)))
     {:protein (subs s 1)
      :origin (protein/origins (subs s 0 1))}
 
