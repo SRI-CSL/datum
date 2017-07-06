@@ -101,8 +101,8 @@ generic_assay = assay_sym sites? detect
 
 binding = assay_sym detect spaces hooks
 hooks = <'('> hook (plus hook)* <')'> | hook (plus hook)*
-hook = (hook_entity / oprotein) handle ip
-hook_entity = symbol
+hook = (hook_sym / oprotein) handle ip
+hook_sym = symbol
 
 (*
   Treatments

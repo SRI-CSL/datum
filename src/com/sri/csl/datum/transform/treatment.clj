@@ -3,25 +3,23 @@
             [com.sri.csl.datum.ops :as ops]
             [com.sri.csl.datum.transform.protein :as protein]))
 
-(defn subject-sym [s]
+(defn multi-sym [s]
   (cond
     (ops/check-op "Protein" s) {:protein s}
     (ops/check-op "Composite" s) {:protein s}
     (ops/check-op "Peptide" s) {:protein s}
     (ops/check-op "Chemical" s) {:chemical s}
     (ops/check-op "Gene" s) {:gene s}
-    :else {:unknown s}))
 
-(defn treat-sym [s]
-  (cond
-    (ops/check-op "Chemical" s) {:chemical s}
+    ;; Only in treatments
     (ops/check-op "Antibody" s) {:antibody s}
     (ops/check-op "Stress" s) {:stress s}
-    (ops/check-op "Protein" s) {:protein s}
 
     (ops/check-op "Protein" (subs s 1))
     {:protein (subs s 1)
      :origin (protein/origins (subs s 0 1))}
+
+    (= s "oligo") {:oligo "oligo"}
 
     :else {:unknown s}))
 
@@ -37,8 +35,9 @@
                  :conjunction cj}}))
 
 (def transformers
-  {:subject_sym subject-sym
-   :treat_sym treat-sym
+  {:subject_sym multi-sym
+   :treat_sym multi-sym
+   :hook_sym multi-sym
    :ktest (c/component :test)
    :conjunction (c/component :conjunction)
    :treatments treatments
