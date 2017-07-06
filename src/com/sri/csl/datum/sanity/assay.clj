@@ -2,6 +2,15 @@
   (:require
    [com.sri.csl.datum.sanity.check :as check]))
 
+(defn ivka-sites-must-be-sty [datum path node]
+  (let [sites (get-in datum [:assay :sites])]
+    (when-not (every? (fn [site]
+                        (or
+                         (#{\S \T \Y} (first site))
+                         (= "sitenr" site)))
+                      sites)
+      "IVKA sites must be S/T/Y or sitenr.")))
+
 (defn ivlka-has-no-sites [datum path node]
   (when (= (get-in datum [:assay :assay])
            "IVLKA")
@@ -16,4 +25,7 @@
   [[(check/postfix [:sites :assay])
     (check/check-and
      ivlka-has-no-sites
-     oligo-binding-has-no-sites)]])
+     oligo-binding-has-no-sites)]
+
+   [(check/postfix ["IVKA" :assay])
+    ivka-sites-must-be-sty]])
