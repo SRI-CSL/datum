@@ -57,10 +57,9 @@
     (when-not (get-in datum required-path)
       msg)))
 
-(defn path-value [path value msg]
+(defn path-value [value-path value]
   (fn [datum path node]
-    (when-not (= (get-in datum path) value)
-      msg)))
+    (= (get-in datum value-path) value)))
 
 (defn check-pred [pred msg]
   (fn [datum path node]
