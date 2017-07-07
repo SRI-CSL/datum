@@ -57,6 +57,16 @@
     (when-not (get-in datum required-path)
       msg)))
 
+(defn path-value [path value msg]
+  (fn [datum path node]
+    (when-not (= (get-in datum path) value)
+      msg)))
+
+(defn check-pred [pred msg]
+  (fn [datum path node]
+    (when-not (pred datum path node)
+      msg)))
+
 (defn check-or [& checkers]
   (fn [datum path node]
     (let [results (map #(% datum path node) checkers)]
