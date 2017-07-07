@@ -1,10 +1,9 @@
-(ns com.sri.csl.datum.sanity.crawl
-  (:require [com.sri.csl.datum.sanity.check :as check]))
+(ns com.sri.csl.datum.sanity.crawl)
 
 (declare crawl)
 
-(defn check-node [datum path checkers node]
-  (let [applicable-checks (check/applicable checkers path)]
+(defn check-node [checkers datum path node]
+  (let [applicable-checks (checkers datum path node)]
     (->> applicable-checks
          (map #(% datum path node))
          flatten
@@ -13,28 +12,28 @@
                 {:path path
                  :error err})))))
 
-(defn crawl-map [datum path checkers m]
+(defn crawl-map [checkers datum path m]
   (mapcat
    (fn [[label child]]
-     (crawl datum (conj path label) checkers child))
+     (crawl checkers datum (conj path label) child))
    m))
 
-(defn crawl-seq [datum path checkers s]
+(defn crawl-seq [checkers datum path s]
   (apply concat
          (map-indexed
           (fn [idx child]
-            (crawl datum (conj path idx) checkers child))
+            (crawl checkers datum (conj path idx) child))
           s)))
 
-(defn crawl [datum path checkers node]
+(defn crawl [checkers datum path node]
   (concat
-   (check-node datum path checkers node)
+   (check-node checkers datum path node)
    (cond
      (map? node)
-     (crawl-map datum path checkers node)
+     (crawl-map checkers datum path node)
 
      (sequential? node)
-     (crawl-seq datum path checkers node)
+     (crawl-seq checkers datum path node)
 
      :else
-     (check-node datum (conj path node) checkers nil))))
+     (check-node checkers datum (conj path node) nil))))

@@ -1,5 +1,6 @@
 (ns com.sri.csl.datum.sanity.core
   (:require [com.sri.csl.datum.sanity
+             [check :as check]
              [crawl :as crawl]
              [sorts :as sorts]
              [subject :as subject]
@@ -18,7 +19,9 @@
    misc/checkers))
 
 (defn check [datum]
-  (let [sanity-errors (crawl/crawl datum '(:datum) (checkers) datum)]
+  (let [sanity-errors (crawl/crawl
+                       (check/checker-finder (checkers))
+                       datum '(:datum) datum)]
     (if (empty? sanity-errors)
       datum
       (assoc datum :sanity-errors sanity-errors))))

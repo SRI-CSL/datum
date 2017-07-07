@@ -25,10 +25,18 @@
     (= spec elt)))
 
 (defn postfix [post]
-  (fn [path]
+  (fn [datum path node]
     (and
      (>= (count path) (count post))
      (every? identity (map path-comp post path)))))
+
+(defn path-and [& path-fns]
+  (fn [datum path node]
+    (every? #(% datum path node) path-fns)))
+
+(defn path-or [& path-fns]
+  (fn [datum path node]
+    (some #(% datum path node) path-fns)))
 
 (defn eq [val]
   (fn [datum path node]
@@ -59,11 +67,11 @@
   (fn [datum path node]
     (flatten (map #(% datum path node) checkers))))
 
-(defn applicable
-  [checks path]
-  (->> checks
-       (map
-        (fn [[applic check]]
-          (when (applic path)
-            check)))
-       (filter identity)))
+(defn checker-finder [checkers]
+  (fn [datum path node]
+    (->> checkers
+         (map
+          (fn [[applic check]]
+            (when (applic datum path node)
+              check)))
+         (filter identity))))
