@@ -2,10 +2,11 @@
   (:require
    [instaparse.failure :as fail]
    [clojure.string :as str]
+   [clojure.stacktrace :as trace]
    [com.sri.csl.datum.sanity.core :as sanity]))
 
 (def error?
-  (some-fn :transform-error
+  (some-fn :internal-error
            :parse-error
            :sanity-errors))
 
@@ -27,13 +28,14 @@
      parse-text
      (fail/marker parse-column))))
 
-(defn format-transform-error [err]
+(defn format-internal-error [err]
   (let [{:keys [file line]} (:meta err)]
     (format-message
      ["File: " file]
      ["Line: " line]
      ""
-     (:transform-error err))))
+     (with-out-str
+       (trace/print-stack-trace (:transform-error err) 10)))))
 
 (defn format-path-component [comp]
   (if (keyword? comp)
@@ -61,7 +63,7 @@
 
 (def formatters
   {"Parse" format-parse-error
-   "Transform" format-transform-error
+   "Internal" format-internal-error
    "Sanity" format-sanity-error})
 
 (defn format-error-section [title errors]
@@ -72,12 +74,12 @@
      "")))
 
 (defn format-errors [errors successes merged]
-  (let [t-errors (filter :transform-error errors)
+  (let [i-errors (filter :internal-error errors)
         p-errors (filter :parse-error errors)
         s-errors (filter :sanity-errors errors)]
     (format-message
      (format-error-section "Parse" p-errors)
-     (format-error-section "Transform" t-errors)
+     (format-error-section "Internal" i-errors)
      (format-error-section "Sanity" s-errors)
      (if (seq merged)
        ["Successful datums: " (count merged)

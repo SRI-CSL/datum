@@ -14,4 +14,4 @@
       (try
         (sanity/check (merge result (datum/datum ast)))
         (catch Exception e
-          (assoc result :transform-error e))))))
+          (assoc result :internal-error e))))))
