@@ -38,12 +38,23 @@
        (trace/print-stack-trace (:transform-error err) 10)))))
 
 (defn format-path-component [comp]
-  (if (keyword? comp)
+  (cond
+    (keyword? comp)
     (name comp)
-    (str comp)))
+
+    (int? comp)
+    (str comp)
+
+    :else
+    nil))
 
 (defn format-path [path]
-  (str/join ":" (reverse (map format-path-component path))))
+  (->> path
+       (map format-path-component)
+       (filter identity)
+       reverse
+       rest
+       (str/join ":")))
 
 (defn format-sanity-complaint [complaint]
   (str (format-path (:path complaint)) " "
