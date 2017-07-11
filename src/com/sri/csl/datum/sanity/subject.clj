@@ -11,6 +11,7 @@
 
 (defn handle-required [datum path node]
   (and
+   (not (empty? node))
    (not (:handle node))
    (not (:chemical node))
    (not (:gene node))
