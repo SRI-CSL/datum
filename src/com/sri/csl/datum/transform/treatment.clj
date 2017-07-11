@@ -43,6 +43,7 @@
    :hook_sym multi-sym
    :ktest (c/component :test)
    :conjunction (c/component :conjunction)
+   :treatment (c/simple-merge)
    :treatments treatments
    :ktreatment treatments
    :substitution treatments})
