@@ -27,6 +27,6 @@
      (check/postfix ["expressed" :origin :_ :hooks])
      (check/postfix ["expressed" :origin :subject])
      (check/path-and
-      (check/postfix ["expressed" :origin :_ :treatments :treatment])
+      (check/postfix ["expressed" :origin :_ :treatments :treatment :datum])
       (check/path-value [:treatment_type] "by")))
     expressed-proteins-from-firstline]])
