@@ -35,7 +35,7 @@
      ["Line: " line]
      ""
      (with-out-str
-       (trace/print-stack-trace (:transform-error err) 10)))))
+       (trace/print-stack-trace (:internal-error err) 10)))))
 
 (defn format-path-component [comp]
   (cond
