@@ -34,7 +34,7 @@
         lines (rest transformed-ast)]
     (postprocess
      (apply merge
-            {:extras (filterv :extra lines)
+            {:extras (mapv :extra (filter :extra lines))
              :ipfrom (mapv :ipfrom (filter :ipfrom lines))
              :comments (mapv :comment (filter :comment lines))}
             (filter singleton? lines)))))
