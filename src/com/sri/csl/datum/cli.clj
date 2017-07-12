@@ -13,6 +13,8 @@
   [["-e" "--errors" "Print errors"
     :id :print-errors]
 
+   ["-g" "--group-errors" "Group sanity errors together"]
+
    ["-o" "--ops-file FILE" "Provide an external ops json file"
     :id :ops-file
     :default-desc ""

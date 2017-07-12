@@ -17,6 +17,7 @@
 (defn run [& args]
   (let [{arguments :arguments
          {:keys [print-errors
+                 group-errors
                  json pretty-json
                  duplicates merge-related]} :options}
         (cli/parse args)
@@ -29,7 +30,7 @@
                  successes)]
 
     (when print-errors
-      (println (errors/format-errors errors successes merged)))
+      (println (errors/format-errors group-errors errors successes merged)))
 
     (when duplicates
       (-> successes
