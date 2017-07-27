@@ -15,7 +15,8 @@
    (not (:handle node))
    (not (:chemical node))
    (not (:gene node))
-   (not (#{"recombinant" "purified"} (:origin node)))
+   (not (#{"recombinant" "purified"
+           "synthetic" "baculovirus"} (:origin node)))
    "Handle required for this subject."))
 
 (def checkers

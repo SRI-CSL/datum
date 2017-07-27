@@ -11,13 +11,19 @@
   (when (= (:treatment_type datum) "itpo")
     "itpo treatment proteins must be expressed."))
 
+(defn sub-protein-origin [{:keys [protein origin]}]
+  (and
+   protein
+   (not (#{"expressed" "recombinant"
+           "synthetic" "baculovirus"}
+         origin))))
+
 (defn substitution-rules [datum path node]
   (let [extra-path [:extras (nth path 2)]
         extra (get-in datum extra-path)
         treatments (get-in extra [:treatment :treatments])]
-    (when (some #(not (#{"expressed" "recombinant"}
-                       (:origin %))) treatments)
-      "Substitution treatments must be expressed or recombinant.")))
+    (when (some sub-protein-origin treatments)
+      "Substitution treatment proteins must be e/r/s/b.")))
 
 (def checkers
   [[(check/postfix ["expressed" :origin :_ :treatments :treatment :datum])
