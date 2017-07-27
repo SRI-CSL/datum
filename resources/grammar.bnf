@@ -73,7 +73,7 @@ detect = <'['> symbol <']'>
 assay_sym = symbol
 
 activity_assay = activity <'('> substrates <')'> sites? detect
-activity = ('IVKA' | 'IVLKA' | 'IVGefA' | 'IVPPaseAct' | 'IVHatAct' | 'IVProteaseAct' | 'IVHDACAct')
+activity = ('IVKA' | 'IVLKA' | 'IVGefA' | 'IVPPaseAct' | 'IVHatAct' | 'IVProteaseAct' | 'IVHDACAct' | 'IVGapA')
 substrates = symbol (<#'[/,]'> symbol)*
 
 locatedin = &'locatedin' assay_sym <'('> position <')'> detect
