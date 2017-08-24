@@ -29,14 +29,15 @@
                  (dup/merge-related successes)
                  successes)]
 
-    (when print-errors
-      (println (errors/format-errors group-errors errors successes merged)))
+    (binding [*out* *err*]
+      (when print-errors
+        (println (errors/format-errors group-errors errors successes merged)))
 
-    (when duplicates
-      (-> successes
-          dup/duplicates
-          dup/format-duplicates
-          println))
+      (when duplicates
+        (-> successes
+            dup/duplicates
+            dup/format-duplicates
+            println)))
 
     (when (or json pretty-json)
       (println (cheshire/generate-string merged {:pretty pretty-json})))))
