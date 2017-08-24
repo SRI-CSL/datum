@@ -30,10 +30,6 @@
   {:mutation "symbol"
    :symbol sym})
 
-(defn mut-string [s]
-  {:mutation "string"
-   :string s})
-
 (def transformers
   {:origin origin
    :protein (c/component :protein)
@@ -49,4 +45,4 @@
    :point point
    :s_mut (c/named-merge :s_mut {:mutation "s_mut"})
    :symbol_mut symbol-mut
-   :mutation_string mut-string})
+   :mutation_string (c/component :mutation_string)})

@@ -39,12 +39,12 @@ handle = <'['> symbol <']'>
   - Any number of mutations in parentheses, plus a mutation string
   - Any number of modifications in curly braces
 *)
-oprotein = origin protein mutations modifications
+oprotein = origin protein (mutations mutation_string?)? modifications?
 
 origin = #'[xbrpks]?'
 protein = symbol
 
-mutations = (<'('> mutation (<'/'> mutation)* <')'> mutation_string?)?
+mutations = <'('> mutation (<'/'> mutation)* <')'>
 <mutation> = range / del_mut / s_mut / point / symbol_mut
 (* Range *)
 range = nat <'-'> nat
@@ -59,7 +59,7 @@ point = letter nat letter
 symbol_mut = symbol
 mutation_string = string
 
-modifications = modification*
+modifications = modification+
 modification = <'{'> mod_symbol sites? <'}'>
 mod_symbol = symbol
 sites = <'('> site (<'/'> site)* <')'>

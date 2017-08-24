@@ -20,6 +20,7 @@
   (merge {:cfirstline (c/simple-merge)
           :sfirstline (c/simple-merge)
           :subject (c/named-merge :subject)
+          :schange (c/component :change)
           :changetype (c/component :treatment_type)}
          protein/transformers
          assay/transformers
