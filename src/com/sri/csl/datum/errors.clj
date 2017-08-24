@@ -116,6 +116,7 @@
      (if group
        (format-error-section "Sanity (Grouped)" s-groups)
        (format-error-section "Sanity" s-errors))
+     ["Errors: " (count errors)]
      (if (seq merged)
        ["Successful datums: " (count merged)
         " (" (- (count successes) (count merged)) " merged)"]
