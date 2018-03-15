@@ -14,13 +14,13 @@
        reader/extract
        (pmap parse/parse-datum)))
 
-(defn run [& args]
+(defn run [options]
   (let [{arguments :arguments
          {:keys [print-errors
                  group-errors
                  json pretty-json
                  duplicates merge-related]} :options}
-        (cli/parse args)
+        options
 
         results (mapcat load-datums arguments)
         errors (filter errors/error? results)
@@ -40,8 +40,10 @@
             println)))
 
     (when (or json pretty-json)
-      (println (cheshire/generate-string merged {:pretty pretty-json})))))
+      (println (cheshire/generate-string merged {:pretty pretty-json})))
+
+    merged))
 
 (defn -main [& args]
-  (apply run args)
+  (apply run (cli/parse args))
   (System/exit 0))
