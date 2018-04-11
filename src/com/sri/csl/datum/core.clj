@@ -45,5 +45,5 @@
     merged))
 
 (defn -main [& args]
-  (apply run (cli/parse args))
+  (run (cli/parse args))
   (System/exit 0))
