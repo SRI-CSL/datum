@@ -9,19 +9,19 @@
              [treatment :as treatment]
              [misc :as misc]]))
 
-(defn checkers []
-  (concat
-   sorts/checkers
-   subject/checkers
-   assay/checkers
-   environment/checkers
-   treatment/checkers
-   misc/checkers))
+(def checkers
+  (check/checker-finder
+   (concat
+    sorts/checkers
+    subject/checkers
+    assay/checkers
+    environment/checkers
+    treatment/checkers
+    misc/checkers)))
 
 (defn check [datum]
-  (let [sanity-errors (crawl/crawl
-                       (check/checker-finder (checkers))
-                       datum '(:datum) datum)]
+  (let [sanity-errors
+        (crawl/crawl-datum checkers datum)]
     (if (empty? sanity-errors)
       datum
       (assoc datum :sanity-errors sanity-errors))))

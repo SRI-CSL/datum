@@ -37,3 +37,6 @@
 
      :else
      (check-node checkers datum (conj path node) nil))))
+
+(defn crawl-datum [checkers datum]
+  (crawl checkers datum '(:datum) datum))
