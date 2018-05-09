@@ -95,7 +95,7 @@ hook_sym = symbol
 
 (*
   Treatments
-  treat_sym can be Antibody, Stress, or Chemical
+  treat_sym can be Antibody, Stress, Pathogen, or Chemical
 *)
 treatment = treat_sym / oprotein (handle ip)?
 treat_sym = symbol

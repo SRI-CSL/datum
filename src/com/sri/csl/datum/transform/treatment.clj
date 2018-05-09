@@ -8,6 +8,7 @@
     ;; Only in treatments
     (ops/check-op "Antibody" s) {:antibody s}
     (ops/check-op "Stress" s) {:stress s}
+    (ops/check-op "Pathogen" s) {:pathogen s}
 
     ;; Subjects/treatments/hooks
     (ops/check-op "Protein" s) {:protein s}

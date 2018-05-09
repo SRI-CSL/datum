@@ -26,6 +26,7 @@
 
    (simple-sort :antibody "Antibody")
    (simple-sort :stress "Stress")
+   (simple-sort :pathogen "Pathogen")
 
    [(check/postfix [#{:antibody :stress} :_ :!treatments])
     (check/error "Antibodies and Stresses are only valid as treatments.")]
