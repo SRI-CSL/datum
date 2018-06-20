@@ -2,18 +2,35 @@
   (:require [com.sri.csl.datum.errors :refer [format-message]]
             [clojure.string :as str]))
 
-;; (defn datum-eq [d1 d2]
-;;   (= (dissoc d1 :meta)
-;;      (dissoc d2 :meta)))
-
-;; (defn datum-fuzzy-eq [d1 d2]
-;;   (= (dissoc d1 :meta :extras)
-;;      (dissoc d2 :meta :extras)))
-
 (defn by-pmid
   "Partitions a seq of datums by PMID."
   [datums]
   (vals (group-by (comp :pmid :source) datums)))
+
+(def merge-text-patterns
+  ["comment:"
+   "enhanced by:"
+   "inhibited by:"
+   "repressed by:"
+   "reversed by:"
+   "unaffected by:"])
+
+(defn mergeable-line
+  "Determines if a line of datum text is of the kind that merged
+  when merging similar datums."
+  [line]
+  (some (partial str/includes? line) merge-text-patterns))
+
+(defn mergeable-lines [datum]
+  (-> datum
+      (get-in [:meta :text])
+      (str/split #"\n")
+      (->> (filter mergeable-line))))
+
+(defn merged-text [[d1 & ds]]
+  (let [base-text (get-in d1 [:meta :text])
+        added-text (mapcat mergeable-lines ds)]
+    (str/join "\n" (into [base-text] added-text))))
 
 (defn merge-datums
   "Merges a seq of datums into a single datum.
@@ -24,7 +41,8 @@
           comments (distinct (mapcat :comments datums))
           extras (distinct (mapcat :extras datums))]
       (assoc (first datums)
-             :meta {:merged metas}
+             :meta {:text (merged-text datums)
+                    :merged metas}
              :comments comments
              :extras extras))
     (first datums)))
