@@ -66,7 +66,7 @@
   sub-paths for each entry in th at vector."
   [d base]
   (if-let [items (get-in d base)]
-    (map #(conj base %)
+    (map #(into [] (conj base %))
          (range 0 (count items)))
     []))
 
@@ -101,7 +101,7 @@
 
 (defn assume-extras [d]
   (let [extra-paths (get-paths d [:extras])
-        inner-paths (mapcat #(get-paths d (conj % :treatments)) extra-paths)]
+        inner-paths (mapcat #(get-paths d (into % [:treatment :treatments])) extra-paths)]
     (assume-paths d inner-paths "endogenous")))
 
 (defn assume-origins [d]
