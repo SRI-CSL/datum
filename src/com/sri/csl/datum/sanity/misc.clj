@@ -6,4 +6,6 @@
   [[(check/postfix ["irt" :treatment_type])
     (check/path-required [:times] "Times must be present in IRT datums.")]
    [(check/postfix [:unknown])
-    (check/error "Unknown symbol %s.")]])
+    (check/error "Unknown symbol %s.")]
+   [(check/postfix [:protein])
+    (check/sibling-exists :origin "Proteins need origins.")]])

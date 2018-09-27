@@ -61,6 +61,17 @@
   (fn [datum path node]
     (= (get-in datum value-path) value)))
 
+(defn sibling-pred [sibling pred msg]
+  (fn [datum path node]
+    (let [outer-path (into [] (rest (reverse (rest path))))
+          sibling-path (conj outer-path sibling)
+          sibling-value (get-in datum sibling-path)]
+      (when-not (pred sibling-value)
+        msg))))
+
+(defn sibling-exists [sibling msg]
+  (sibling-pred sibling identity msg))
+
 (defn check-pred [pred msg]
   (fn [datum path node]
     (when-not (pred datum path node)
