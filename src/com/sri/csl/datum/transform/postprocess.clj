@@ -30,8 +30,8 @@
 ;; it in. If it's in the subject, hooks, or extras, it can
 ;; be assumed to be endogenous.
 ;;
-;; If it's in the cell mutations, and there's a ~pos/neg/null
-;; tag on the protein, it's endogenous.
+;; If it's in the cell mutations or IPFrom, and there's a
+;; ~pos/neg/null tag on the protein, it's endogenous.
 ;;
 ;; If it's in an itao treatment, it's endogenous.
 ;; If it's in an irt treatment, it's recombinant.
@@ -63,56 +63,70 @@
 
 (defn get-paths
   "Given a path into a datum, ending in a vector, generate
-  sub-paths for each entry in th at vector."
+  sub-paths for each entry in that vector."
   [d base]
   (if-let [items (get-in d base)]
-    (map #(into [] (conj base %))
-         (range 0 (count items)))
+    (if (vector? items)
+      (map #(into [] (conj base %))
+           (range 0 (count items)))
+      [base])
     []))
 
-(defn assume-subject [d]
-  (assume-path d [:subject] "endogenous"))
+(defn get-paths-multi
+  "Given a series of path segments, generate sub paths by
+  expanding vectors between them."
+  [d path-segments]
+  (loop [[seg & rst] path-segments
+         paths [[]]]
+    (if seg
+      (recur rst
+             (mapcat #(get-paths d (into % seg)) paths))
+      paths)))
 
-(defn assume-hooks [d]
-  (let [paths (get-paths d [:assay :hooks])]
-    (assume-paths d paths "endogenous")))
-
-(defn assume-cellmuts [d]
-  (let [paths (get-paths d [:environment :cell-mutations])
-        mutated-paths (filter #(get-in d (conj % :mutation-type)) paths)]
-    (assume-paths d mutated-paths "endogenous")))
+(defn has-mutation-type [d path]
+  (get-in d (conj path :mutation-type)))
 
 (defn treatment-assumption [d]
-  (case (:treatment_type d)
-    "irt"
-    "recombinant"
+  ({"irt" "recombinant"
+    "itao" "endogenous"}
+   (:treatment_type d)))
 
-    "itao"
-    "endogenous"
+(def base-assumption
+  {:assumption-fn (constantly "endogenous")
+   :filter-fn (constantly true)})
 
-    nil))
+(def origin-assumptions
+  (map (partial merge base-assumption)
+   [{:pathspec [[:subject]]}
+    {:pathspec [[:assay :hooks]]}
+    {:pathspec [[:environment :cell-mutations]]
+     :filter-fn has-mutation-type}
+    {:pathspec [[:ipfrom] [:cell-mutations]]
+     :filter-fn has-mutation-type}
+    {:pathspec [[:treatment :treatments]]
+     :assumption-fn treatment-assumption}
+    {:pathspec [[:extras] [:treatment :treatments]]}]))
 
-(defn assume-treatments [d]
-  (let [assumption (treatment-assumption d)
-        paths (get-paths d [:treatment :treatments])]
-    (if assumption
-      (assume-paths d paths assumption)
-      d)))
+(defn assume-spec
+  "Given a datum and an assumption spec, fill in missing origins.
 
-(defn assume-extras [d]
-  (let [extra-paths (get-paths d [:extras])
-        inner-paths (mapcat #(get-paths d (into % [:treatment :treatments])) extra-paths)]
-    (assume-paths d inner-paths "endogenous")))
+  An assumption spec consists of:
+  - a pathspec, a vector of one or more path segments to be explored
+  - a filter function, which takes a datum and a path and returns true
+    if that path is a valid path to make an assumption about
+  - an assumption function, which takes a datum and generations an
+    assumption about the default protein type"
+  [d {:keys [pathspec assumption-fn filter-fn]}]
+  (if-let [assumption (assumption-fn d)]
+    (let [paths (get-paths-multi d pathspec)
+          filtered-paths (filter (partial filter-fn d) paths)]
+      (assume-paths d paths assumption))
+    d))
 
-(defn assume-origins [d]
-  (-> d
-      assume-subject
-      assume-hooks
-      assume-cellmuts
-      assume-treatments
-      assume-extras))
+(defn assume-origins [d specs]
+  (reduce assume-spec d specs))
 
 (defn postprocess [d]
   (-> d
       stimes
-      assume-origins))
+      (assume-origins origin-assumptions)))
