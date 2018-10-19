@@ -43,6 +43,6 @@
    :range range-mut
    :del_mut del-mut
    :point point
-   :s_mut (c/named-merge :s_mut {:mutation "s_mut"})
+   :s_mut (c/simple-merge {:mutation "s_mut"})
    :symbol_mut symbol-mut
    :mutation_string (c/component :mutation_string)})
