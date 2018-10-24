@@ -7,22 +7,29 @@
              [errors :as errors]
              [reader :as reader]
              [cli :as cli]]
-            [cheshire.core :as cheshire]))
+            [cheshire.core :as cheshire]
+            [clj-progress.core :as prg]))
 
-(defn load-datums [file]
-  (->> file
-       reader/extract
-       (pmap parse/parse-datum)))
+(prg/set-progress-bar! ":header :done/:total [:bar] :percent")
+(prg/config-progress-bar! :width 45)
+(prg/set-throttle! 50)
+
+(defn parse-datums [datums]
+  (binding [*out* *err*]
+    (let [title "Parsing"
+          pbar (prg/init title (count datums))]
+      (prg/done (pmap (comp prg/tick parse/parse-datum) datums)))))
 
 (defn run [options]
   (let [{arguments :arguments
          {:keys [print-errors
                  group-errors
-                 json pretty-json
+                 json json-pretty json-dest
                  duplicates merge-related]} :options}
         options
 
-        results (mapcat load-datums arguments)
+        raw (mapcat reader/extract arguments)
+        results (parse-datums raw)
         errors (filter errors/error? results)
         successes (remove errors/error? results)
         merged (if merge-related
@@ -39,8 +46,8 @@
             dup/format-duplicates
             println)))
 
-    (when (or json pretty-json)
-      (println (cheshire/generate-string merged {:pretty pretty-json})))
+    (when json
+      (cheshire/generate-stream merged json-dest {:pretty json-pretty}))
 
     merged))
 

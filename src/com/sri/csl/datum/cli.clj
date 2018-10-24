@@ -9,6 +9,15 @@
     (throw (Exception. "Invalid args."))
     (System/exit return-code)))
 
+(defn json-assoc [m k v]
+  (assoc m
+         :json true
+         k true
+         :json-dest
+         (if (= v "--")
+           *out*
+           (io/writer v))))
+
 (def cli-options
   [["-e" "--errors" "Print errors"
     :id :print-errors]
@@ -21,9 +30,11 @@
     :parse-fn io/file
     :validate [#(.isFile %) "Ops file not found."]]
 
-   ["-j" "--json" "Print parsed datums as JSON"] 
-   ["-J" "--pretty-json" "Pretty-print parsed datums as JSON"
-    :default false]
+   ["-j" "--json FILE" "Print parsed datums as JSON"
+    :assoc-fn json-assoc]
+   ["-J" "--pretty-json FILE" "Pretty-print parsed datums as JSON"
+    :id :json-pretty
+    :assoc-fn json-assoc]
    ["-D" "--duplicates" "Print a list of duplicate datums"]
    ["-m" "--merge" "Merge datums that only differ in extras."
     :id :merge-related]])

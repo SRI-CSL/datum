@@ -7,6 +7,7 @@
                  [org.clojure/algo.generic "0.1.2"]
                  [instaparse "1.4.5"]
                  [org.clojure/tools.cli "0.3.5"]
+                 [intervox/clj-progress "0.2.1"]
                  [cheshire "5.8.0"]]
   :main ^:skip-aot com.sri.csl.datum.core
   :target-path "target/%s"
