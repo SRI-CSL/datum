@@ -24,11 +24,18 @@
 
       true {})))
 
+(def date-pattern "yyy-MM-dd HH:mm:ss")
+(def datestamp
+  (-> date-pattern
+      (java.text.SimpleDateFormat.)
+      (.format (java.util.Date.))))
+
 (defn build-datum
   "Builds a merged datum from a collection of tagged lines"
   [lines]
   (assoc (dissoc (first lines) :first)
-         :text (str/join "\n" (map :text lines))))
+         :text (str/join "\n" (map :text lines))
+         :date datestamp))
 
 (defn xf
   "Builds a transducer pipeline to extract datums from a sequence
@@ -64,8 +71,8 @@
 (defn text-file? [file]
   (and
    (.isFile file)
-   (str/ends-with? (.getName file)
-                      ".txt")))
+   (str/ends-with? (.getName file
+                             ".txt"))))
 
 (defn extract-directory
   "Extract and tag all datums from a directory."
