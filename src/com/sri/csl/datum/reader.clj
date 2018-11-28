@@ -71,8 +71,8 @@
 (defn text-file? [file]
   (and
    (.isFile file)
-   (str/ends-with? (.getName file
-                             ".txt"))))
+   (str/ends-with? (.getName file)
+                   ".txt")))
 
 (defn extract-directory
   "Extract and tag all datums from a directory."
